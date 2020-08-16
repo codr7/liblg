@@ -1,6 +1,10 @@
+* add lg_pc_init like lg_stack_init
 * add stack type with size/offs/ptr
 ** stack.h/c
 ** return prev from lg_stack_init
 * scan free on malloc
 ** switch free from ls to binary sorted set
 *** grab bset from github
+* add immediate mode to add op
+* finish sub op
+* add clone/drop ops

@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include "lg/ls.h"
+#include "lg/op.h"
 
 struct lg_val;
 
@@ -22,11 +23,10 @@ void lg_vm_deinit(struct lg_vm *vm);
 
 void lg_stack_init(struct lg_vm *vm, size_t n);
 struct lg_val *lg_push(struct lg_vm *vm);
+struct lg_val *lg_peek(struct lg_vm *vm);
 struct lg_val *lg_pop(struct lg_vm *vm);
 
-enum lg_op;
-
-uint64_t *lg_emit(struct lg_vm *vm, enum lg_op type);
+lg_op_t *lg_emit(struct lg_vm *vm, enum lg_op type);
 void lg_exec(struct lg_vm *vm, size_t start_pc);
 
 #endif

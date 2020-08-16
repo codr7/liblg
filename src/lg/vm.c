@@ -6,7 +6,7 @@
 #include "lg/vm.h"
 
 #define LG_DISPATCH()				\
-  op = *((uint64_t *)vm->memory + vm->pc++);	\
+  op = *((lg_op_t *)vm->memory + vm->pc++);	\
   goto *dispatch[LG_OP_CODE(op)]
 
 struct lg_vm *lg_vm_init(struct lg_vm *vm) {
@@ -38,21 +38,25 @@ struct lg_val *lg_push(struct lg_vm *vm) {
   return p;
 }
 
+struct lg_val *lg_peek(struct lg_vm *vm) {
+  return (struct lg_val *)vm->memory + (vm->sp-1);
+}
+
 struct lg_val *lg_pop(struct lg_vm *vm) {
   vm->sp--;
   vm->stack_offs--;
   return (struct lg_val *)vm->memory + vm->sp;
 }
 
-uint64_t *lg_emit(struct lg_vm *vm, enum lg_op type) {
-  uint64_t *p = (uint64_t *)vm->memory + vm->pc++;
+lg_op_t *lg_emit(struct lg_vm *vm, enum lg_op type) {
+  lg_op_t *p = (lg_op_t *)vm->memory + vm->pc++;
   *p = type;
   return p;
 }
 
 void lg_exec(struct lg_vm *vm, size_t start_pc) {
   static void* dispatch[] = {NULL, &&add, &&sub, &&stop};
-  uint64_t op = 0;
+  lg_op_t op = 0;
   vm->pc = start_pc;
   LG_DISPATCH();
   
