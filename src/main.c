@@ -16,7 +16,7 @@ int main() {
   void *p = lg_malloc(&vm, 10, 1);
   lg_free(&vm, p);
 
-  vm.pc = (lg_malloc(&vm, sizeof(lg_op_t), 32) - vm.memory) / sizeof(lg_op_t);
+  lg_pc_init(&vm, 32);
   size_t start_pc = vm.pc;
   lg_emit(&vm, LG_ADD);
   lg_emit(&vm, LG_STOP);

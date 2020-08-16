@@ -22,6 +22,7 @@ struct lg_vm *lg_vm_init(struct lg_vm *vm);
 void lg_vm_deinit(struct lg_vm *vm);
 
 void lg_stack_init(struct lg_vm *vm, size_t n);
+size_t lg_pc_init(struct lg_vm *vm, size_t n);
 struct lg_val *lg_push(struct lg_vm *vm);
 struct lg_val *lg_peek(struct lg_vm *vm);
 struct lg_val *lg_pop(struct lg_vm *vm);

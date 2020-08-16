@@ -31,6 +31,13 @@ void lg_stack_init(struct lg_vm *vm, size_t n) {
   vm->stack_offs = 0;
 }
 
+size_t lg_pc_init(struct lg_vm *vm, size_t n) {
+  size_t prev = vm->pc;
+  vm->pc = (lg_malloc(vm, sizeof(lg_op_t), n) - vm->memory) / sizeof(lg_op_t);
+  return prev;
+}
+
+		
 struct lg_val *lg_push(struct lg_vm *vm) {
   struct lg_val *p = (struct lg_val *)vm->memory + vm->sp;
   vm->sp++;

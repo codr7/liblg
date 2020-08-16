@@ -1,4 +1,3 @@
-* add lg_pc_init like lg_stack_init
 * add stack type with size/offs/ptr
 ** stack.h/c
 ** return prev from lg_stack_init
