@@ -1,9 +1,7 @@
-* add stack type with size/offs/ptr
-** stack.h/c
-** return prev from lg_stack_init
+* fib
 * scan free on malloc
 ** switch free from ls to binary sorted set
 *** grab bset from github
 * add immediate mode to add op
 * finish sub op
-* add clone/drop ops
+* add copy/clone/drop ops

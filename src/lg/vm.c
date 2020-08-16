@@ -13,7 +13,6 @@ struct lg_vm *lg_vm_init(struct lg_vm *vm) {
   vm->memory = NULL;
   vm->memory_size = vm->memory_use = 0;
   lg_ls_init(&vm->free);
-  vm->stack_size = vm->stack_offs = 0;
   vm->pc = vm->sp = 0;
   vm->debug = false;
   return vm;
@@ -25,24 +24,20 @@ void lg_vm_deinit(struct lg_vm *vm) {
   }
 }
 
-void lg_stack_init(struct lg_vm *vm, size_t n) {
-  vm->sp = (lg_malloc(vm, sizeof(struct lg_val), n) - vm->memory) / sizeof(struct lg_val);
-  vm->stack_size = n;
-  vm->stack_offs = 0;
-}
-
 size_t lg_pc_init(struct lg_vm *vm, size_t n) {
   size_t prev = vm->pc;
   vm->pc = (lg_malloc(vm, sizeof(lg_op_t), n) - vm->memory) / sizeof(lg_op_t);
   return prev;
 }
 
+size_t lg_sp_init(struct lg_vm *vm, size_t n) {
+  size_t prev = vm->sp;
+  vm->sp = (lg_malloc(vm, sizeof(struct lg_val), n) - vm->memory) / sizeof(struct lg_val);
+  return prev;
+}
 		
 struct lg_val *lg_push(struct lg_vm *vm) {
-  struct lg_val *p = (struct lg_val *)vm->memory + vm->sp;
-  vm->sp++;
-  vm->stack_offs++;
-  return p;
+  return (struct lg_val *)vm->memory + vm->sp++;
 }
 
 struct lg_val *lg_peek(struct lg_vm *vm) {
@@ -50,9 +45,7 @@ struct lg_val *lg_peek(struct lg_vm *vm) {
 }
 
 struct lg_val *lg_pop(struct lg_vm *vm) {
-  vm->sp--;
-  vm->stack_offs--;
-  return (struct lg_val *)vm->memory + vm->sp;
+  return (struct lg_val *)vm->memory + --vm->sp;
 }
 
 lg_op_t *lg_emit(struct lg_vm *vm, enum lg_op type) {

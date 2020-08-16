@@ -21,7 +21,7 @@ int main() {
   lg_emit(&vm, LG_ADD);
   lg_emit(&vm, LG_STOP);
   
-  lg_stack_init(&vm, 32);
+  lg_sp_init(&vm, 32);
   lg_val_init(lg_push(&vm), &lg_int_t)->as_int = 7;
   lg_val_init(lg_push(&vm), &lg_int_t)->as_int = 35;
   

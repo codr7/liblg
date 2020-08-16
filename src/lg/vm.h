@@ -13,7 +13,6 @@ struct lg_vm {
   uint8_t *memory;
   size_t memory_size, memory_use;
   struct lg_ls free;
-  size_t stack_size, stack_offs;
   size_t pc, sp;
   bool debug;
 };
@@ -21,7 +20,7 @@ struct lg_vm {
 struct lg_vm *lg_vm_init(struct lg_vm *vm);
 void lg_vm_deinit(struct lg_vm *vm);
 
-void lg_stack_init(struct lg_vm *vm, size_t n);
+size_t lg_sp_init(struct lg_vm *vm, size_t n);
 size_t lg_pc_init(struct lg_vm *vm, size_t n);
 struct lg_val *lg_push(struct lg_vm *vm);
 struct lg_val *lg_peek(struct lg_vm *vm);
