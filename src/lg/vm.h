@@ -12,18 +12,21 @@ struct lg_vm {
   uint8_t *memory;
   size_t memory_size, memory_use;
   struct lg_ls free;
-  uint64_t *code;
-  uint64_t *pc;
-  struct lg_val *stack;
+  size_t stack_size, stack_offs;
+  size_t pc, sp;
   bool debug;
 };
 
 struct lg_vm *lg_vm_init(struct lg_vm *vm);
 void lg_vm_deinit(struct lg_vm *vm);
 
+void lg_stack_init(struct lg_vm *vm, size_t n);
 struct lg_val *lg_push(struct lg_vm *vm);
 struct lg_val *lg_pop(struct lg_vm *vm);
 
-void lg_exec(struct lg_vm *vm, uint64_t *start_pc);
+enum lg_op;
+
+uint64_t *lg_emit(struct lg_vm *vm, enum lg_op type);
+void lg_exec(struct lg_vm *vm, size_t start_pc);
 
 #endif

@@ -2,6 +2,7 @@
 #define LG_MALLOC_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 #include "lg/ls.h"
 
@@ -12,7 +13,7 @@ struct lg_malloc {
   size_t size;
 };
 
-void *lg_malloc(struct lg_vm *vm, size_t size, size_t n);
+uint8_t *lg_malloc(struct lg_vm *vm, size_t size, size_t n);
 void lg_free(struct lg_vm *vm, void *p);
 
 #endif

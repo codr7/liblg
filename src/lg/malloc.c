@@ -3,7 +3,7 @@
 #include "lg/malloc.h"
 #include "lg/vm.h"
 
-void *lg_malloc(struct lg_vm *vm, size_t size, size_t n) {
+uint8_t *lg_malloc(struct lg_vm *vm, size_t size, size_t n) {
   size_t s = size*(n+1) + sizeof(struct lg_malloc);
 
   if (vm->memory_use + s > vm->memory_size) {

@@ -3,10 +3,12 @@
 
 #include <stdbool.h>
 
-#define LG_OP_CODE(op)				\
-  (op >> 60)
+#define LG_OP_CODE_BITS 6
 
-enum lg_op {LG_ADD=1, LG_SUB=2};
+#define LG_OP_CODE(op)				\
+  (op ^ (1 >> LG_OP_CODE_BITS))
+
+enum lg_op {LG_ADD=1, LG_SUB=2, LG_STOP=3};
 
 struct lg_val;
 struct lg_vm;

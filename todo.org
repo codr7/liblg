@@ -1,6 +1,6 @@
+* add stack type with size/offs/ptr
+** stack.h/c
+** return prev from lg_stack_init
 * scan free on malloc
 ** switch free from ls to binary sorted set
 *** grab bset from github
-* test add
-** add uint64_t lg_emit(vm, enum lg_op type)
-** run lg_exec
