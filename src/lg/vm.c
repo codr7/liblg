@@ -55,25 +55,29 @@ lg_op_t *lg_emit(struct lg_vm *vm, enum lg_op type) {
 }
 
 void lg_exec(struct lg_vm *vm, size_t start_pc) {
-  static void* dispatch[] = {NULL, &&add, &&sub, &&stop};
+  static void* dispatch[] = {NULL, &&add, &&cp, &&stop, &&sub, &&swap};
   lg_op_t op = 0;
   vm->pc = start_pc;
   LG_DISPATCH();
   
   add: {
       struct lg_val y = *lg_pop(vm), x = *lg_pop(vm);
-      lg_add(vm, &x, &y);
+      lg_add(vm, x, y);
       lg_val_deinit(&x);
       lg_val_deinit(&y);
       LG_DISPATCH();
     }
-  
+ cp: {
+    lg_cp(vm, *lg_peek(vm));
+  }
   sub: {
       struct lg_val y = *lg_pop(vm), x = *lg_pop(vm);
-      lg_sub(vm, &x, &y);
+      lg_sub(vm, x, y);
       lg_val_deinit(&x);
       lg_val_deinit(&y);
       LG_DISPATCH();
     }
+ swap: {
+  }
  stop: {}
 }

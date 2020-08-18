@@ -7,8 +7,10 @@ struct lg_vm;
 struct lg_type {
   char *id;
 
-  void (*add_imp)(struct lg_vm *vm, struct lg_val *x, struct lg_val *y);
-  void (*deinit_imp)(struct lg_val *val);
+  void (*add_imp)(struct lg_vm *vm, struct lg_val x, struct lg_val y);
+  void (*cp_imp)(struct lg_vm *vm, struct lg_val src, struct lg_val dst);
+  void (*deinit_imp)(struct lg_val *v);
+  void (*sub_imp)(struct lg_vm *vm, struct lg_val x, struct lg_val y);
 };
 
 struct lg_type *lg_type_init(struct lg_type *type, const char *id);

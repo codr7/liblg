@@ -1,7 +1,12 @@
 * fib
-* scan free on malloc
+** finish swap
+** add call op
+* scan vm.free on malloc
 ** switch free from ls to binary sorted set
 *** grab bset from github
-* add immediate mode to add op
-* finish sub op
-* add copy/clone/drop ops
+* add immediate mode to add/sub ops
+* add drop op
+
+method fib(0)   _
+method fib(1)   _
+method fib(Int) {-1! $copy fib $swap -1! fib +}
