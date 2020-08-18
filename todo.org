@@ -1,5 +1,4 @@
 * fib
-** finish swap
 ** add call op
 * scan vm.free on malloc
 ** switch free from ls to binary sorted set

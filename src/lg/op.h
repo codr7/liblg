@@ -19,5 +19,6 @@ struct lg_vm;
 bool lg_add(struct lg_vm *vm, struct lg_val x, struct lg_val y);
 struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src);
 bool lg_sub(struct lg_vm *vm, struct lg_val x, struct lg_val y);
+void lg_swap(struct lg_vm *vm);
 
 #endif

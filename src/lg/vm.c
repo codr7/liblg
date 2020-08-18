@@ -78,6 +78,7 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
       LG_DISPATCH();
     }
  swap: {
+    lg_swap(vm);
   }
  stop: {}
 }

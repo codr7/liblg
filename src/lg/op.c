@@ -48,3 +48,11 @@ bool lg_sub(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
   t->sub_imp(vm, x, y);
   return true;
 }
+
+void lg_swap(struct lg_vm *vm) {
+  struct lg_val *y = lg_peek(vm), *x = lg_peek(vm)-1; 
+
+  struct lg_val tmp = *x;
+  *x = *y;
+  *y = tmp;
+}
