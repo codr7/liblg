@@ -4,7 +4,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#include "lg/ls.h"
+#include "lg/bset.h"
 #include "lg/op.h"
 #include "lg/target.h"
 
@@ -13,7 +13,7 @@ struct lg_val;
 struct lg_vm {
   uint8_t *memory;
   size_t memory_size, memory_use;
-  struct lg_ls free;
+  struct lg_bset free;
   struct lg_target main;
   ptrdiff_t stack;
   size_t sp;

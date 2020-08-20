@@ -6,12 +6,10 @@
 
 #include "lg/ls.h"
 
-struct lg_vm;
+#define LG_MALLOC_HEADER_SIZE sizeof(ptrdiff_t)
 
-struct lg_malloc {
-  struct lg_ls ls;
-  size_t size;
-};
+typedef ptrdiff_t lg_malloc_t;
+struct lg_vm;
 
 uint8_t *lg_malloc(struct lg_vm *vm, size_t size, size_t n);
 void lg_free(struct lg_vm *vm, ptrdiff_t p);

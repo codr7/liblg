@@ -5,10 +5,20 @@
 #include "lg/val.h"
 #include "lg/vm.h"
 
+static enum lg_cmp cmp_malloc(const void *x, const void *y) {
+  int xv = *(const lg_malloc_t *)x, yv = *(const lg_malloc_t *)y;
+
+  if (xv < yv) {
+    return LG_LT;
+  }
+
+  return (xv > yv) ? LG_GT : LG_EQ;
+}
+
 struct lg_vm *lg_vm_init(struct lg_vm *vm, size_t nops, size_t nstack) {
   vm->memory = NULL;
   vm->memory_size = vm->memory_use = 0;
-  lg_ls_init(&vm->free);
+  lg_bset_init(&vm->free, sizeof(lg_malloc_t), cmp_malloc);
   lg_target_init(&vm->main, vm, "main", nops);
   lg_stack_init(vm, nstack);
   vm->debug = false;
@@ -25,6 +35,8 @@ void lg_vm_deinit(struct lg_vm *vm) {
   if (vm->memory) {
     free(vm->memory);
   }
+
+  lg_bset_deinit(&vm->free);
 }
 
 void lg_stack_init(struct lg_vm *vm, size_t n) {
