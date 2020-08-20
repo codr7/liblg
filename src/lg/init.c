@@ -10,4 +10,5 @@ void lg_init() {
 
 void lg_deinit() {
   lg_type_deinit(&lg_int_type);
+  lg_type_deinit(&lg_target_type);
 }

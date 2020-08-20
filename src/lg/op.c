@@ -26,6 +26,13 @@ bool lg_add(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
   return true;
 }
 
+void lg_call(struct lg_target *tgt) {
+  struct lg_vm *vm = tgt->vm;
+  lg_push_call(vm);
+  vm->target = tgt;
+  vm->pc = 0;
+}
+
 struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src) {  
   struct lg_val *dst = lg_push(vm);
   *dst = src;

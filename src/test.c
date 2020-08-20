@@ -11,7 +11,7 @@
 #include "lg/vm.h"
 
 void fib_tests(struct lg_vm *vm) {
-  size_t start_pc = vm->main.pc;
+  size_t start_pc = vm->pc;
 
   struct lg_op *op = lg_emit(&vm->main, LG_PUSH);
   lg_val_init(&op->as_push.val, &lg_int_type)->as_int = 10;
@@ -36,29 +36,32 @@ void fib_tests(struct lg_vm *vm) {
 
   lg_emit(&f, LG_CALL)->as_call.mode = LG_CALL_RECURSIVE;
   lg_emit(&f, LG_ADD);
-  lg_emit(&f, LG_STOP);
-  lg_exec(&vm->main, start_pc);
+  lg_emit(&f, LG_RET);
   
+  lg_emit(&f, LG_STOP);
+  lg_exec(vm, start_pc);
+
+  lg_target_deinit(&f);
   printf("fib: %ld\n", lg_pop(vm)->as_int);
 }
 
 int main() {
   lg_init();
   struct lg_vm vm;
-  lg_vm_init(&vm, 100, 100);
+  lg_vm_init(&vm, 100, 100, 100);
   vm.debug = true;
 
   void *p = lg_malloc(&vm, 10, 1);
   lg_free(&vm, p - (void *)vm.memory);
 
-  size_t start_pc = vm.main.pc;
+  size_t start_pc = vm.pc;
   lg_emit(&vm.main, LG_ADD);
   lg_emit(&vm.main, LG_STOP);
 
   lg_val_init(lg_push(&vm), &lg_int_type)->as_int = 7;
   lg_val_init(lg_push(&vm), &lg_int_type)->as_int = 35;
   
-  lg_exec(&vm.main, start_pc);
+  lg_exec(&vm, start_pc);
   assert(lg_pop(&vm)->as_int == 42);
   fib_tests(&vm);
   lg_vm_deinit(&vm);

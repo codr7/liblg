@@ -1,10 +1,10 @@
-* scan vm.free on malloc
-** grap next larger block if any
-
 * fib
-** finish call op
-** add 0/1-test
+** emit 0/1-logic
 *** add branch op
+** test
+* scan vm.free on malloc
+** grab next larger block if any
+** add malloc/free test
 * add immediate mode to add/sub ops
 ** use for constants
 * add drop op
