@@ -1,5 +1,14 @@
+* replace ls free with bset
+** prefix allocation with size_t size instead
+
 * fib
-** add call op
+** move emit/exec to target type
+** add vm.main target
+** add types/target.h/c
+** add val.as_target
+** finish call op
+** add 0/1-test
+*** add branch op
 * scan vm.free on malloc
 ** switch free from ls to binary sorted set
 *** grab bset from github

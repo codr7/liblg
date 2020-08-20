@@ -4,6 +4,11 @@
 #include "lg/val.h"
 #include "lg/vm.h"
 
+struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code) {
+  op->code = code;
+  return op;
+}
+
 bool lg_add(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
   struct lg_type *t = x.type;
 
@@ -19,6 +24,17 @@ bool lg_add(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
 
   t->add_imp(vm, x, y);
   return true;
+}
+
+struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src) {  
+  struct lg_val *dst = lg_push(vm);
+  *dst = src;
+
+  if (src.type->clone_imp) {
+    src.type->clone_imp(vm, *dst, src);
+  }
+
+  return dst;
 }
 
 struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src) {

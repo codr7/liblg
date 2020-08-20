@@ -23,7 +23,7 @@ uint8_t *lg_malloc(struct lg_vm *vm, size_t size, size_t n) {
   return p + sizeof(struct lg_malloc);
 }
 
-void lg_free(struct lg_vm *vm, void *p) {
-  struct lg_malloc *m = (struct lg_malloc *)((uint8_t *)p - sizeof(struct lg_malloc));
+void lg_free(struct lg_vm *vm, ptrdiff_t p) {
+  struct lg_malloc *m = (struct lg_malloc *)(vm->memory + p - sizeof(struct lg_malloc));
   lg_ls_push_front(&vm->free, &m->ls);
 }

@@ -4,19 +4,34 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define LG_OP_CODE_BITS 6
+#include "lg/val.h"
 
-#define LG_OP_CODE(op)				\
-  (op & ((1 << LG_OP_CODE_BITS)-1))
+enum lg_op_code {LG_ADD=1, LG_CALL, LG_CLONE, LG_CP, LG_PUSH, LG_STOP, LG_SUB, LG_SWAP};
 
-typedef uint64_t lg_op_t;
+enum lg_call_mode {LG_CALL_RECURSIVE, LG_CALL_STACK};
 
-enum lg_op {LG_ADD=1, LG_CP, LG_STOP, LG_SUB, LG_SWAP};
+struct lg_call_op {
+  enum lg_call_mode mode;
+};
 
-struct lg_val;
+struct lg_push_op {
+  struct lg_val val;
+};
+  
+struct lg_op {
+  enum lg_op_code code;
+
+  union {
+    struct lg_call_op as_call;
+    struct lg_push_op as_push;
+  };
+};
+
 struct lg_vm;
 
+struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code);
 bool lg_add(struct lg_vm *vm, struct lg_val x, struct lg_val y);
+struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src);
 struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src);
 bool lg_sub(struct lg_vm *vm, struct lg_val x, struct lg_val y);
 void lg_swap(struct lg_vm *vm);
