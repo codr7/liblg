@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include "lg/error.h"
 #include "lg/op.h"
 #include "lg/type.h"
@@ -24,6 +26,17 @@ bool lg_add(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
 
   t->add_imp(vm, x, y);
   return true;
+}
+
+bool lg_eq(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
+  struct lg_type *t = x.type;
+
+  if (y.type != t) {
+    return false;
+  }
+
+  assert(t->eq_imp);
+  return t->eq_imp(x, y);
 }
 
 void lg_call(struct lg_target *tgt) {

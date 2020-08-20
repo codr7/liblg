@@ -15,14 +15,24 @@ void fib_tests(struct lg_vm *vm) {
 
   struct lg_op *op = lg_emit(&vm->main, LG_PUSH);
   lg_val_init(&op->as_push.val, &lg_int_type)->as_int = 10;
-
+  
   struct lg_target f;
-  lg_target_init(&f, vm, "fib", 32);
+  lg_target_init(&f, vm, "fib", 10);
   op = lg_emit(&vm->main, LG_PUSH);
   lg_val_init(&op->as_push.val, &lg_target_type)->as_target = &f;
   lg_emit(&vm->main, LG_CALL)->as_call.mode = LG_CALL_STACK;
+  
+  lg_emit(&f, LG_CP);
+  struct lg_brint_op *zero_brint = &lg_emit(&f, LG_BRINT)->as_brint;
+  zero_brint->cond = 0;
+  zero_brint->false_pc = vm->pc;
+  
+  lg_emit(&f, LG_CP);
+  struct lg_brint_op *one_brint = &lg_emit(&f, LG_BRINT)->as_brint;
+  one_brint->cond = 0;
+  one_brint->false_pc = vm->pc;
 
-  op = lg_emit(&vm->main, LG_PUSH);
+  op = lg_emit(&f, LG_PUSH);
   lg_val_init(&op->as_push.val, &lg_int_type)->as_int = 1;
   lg_emit(&f, LG_SUB);
   
@@ -36,9 +46,12 @@ void fib_tests(struct lg_vm *vm) {
 
   lg_emit(&f, LG_CALL)->as_call.mode = LG_CALL_RECURSIVE;
   lg_emit(&f, LG_ADD);
+
+  zero_brint->true_pc = vm->pc;
+  one_brint->true_pc = vm->pc;
   lg_emit(&f, LG_RET);
   
-  lg_emit(&f, LG_STOP);
+  lg_emit(&vm->main, LG_STOP);
   lg_exec(vm, start_pc);
 
   lg_target_deinit(&f);

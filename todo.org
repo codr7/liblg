@@ -1,7 +1,6 @@
-* fib
-** emit 0/1-logic
-*** add branch op
-** test
+* test fib
+** inline call target
+** inline add/sub rhs
 * scan vm.free on malloc
 ** grab next larger block if any
 ** add malloc/free test

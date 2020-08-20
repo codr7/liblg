@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "lg/malloc.h"
+#include "lg/util.h"
 #include "lg/vm.h"
 
 uint8_t *lg_malloc(struct lg_vm *vm, size_t size, size_t n) {

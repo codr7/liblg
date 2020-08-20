@@ -4,8 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "lg/ls.h"
-
 #define LG_MALLOC_HEADER_SIZE sizeof(ptrdiff_t)
 
 typedef ptrdiff_t lg_malloc_t;
