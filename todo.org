@@ -1,12 +1,10 @@
+* remove vm.free/memory
+* use vec for target ops
+* add lg_text struct
+** vec ops
 * test fib
 ** inline call target
-** inline add/sub rhs
-* scan vm.free on malloc
-** grab next larger block if any
-** add malloc/free test
-* add immediate mode to add/sub ops
-** use for constants
-* add drop op
+** add inc/dec ops
 
 method fib(0)   _
 method fib(1)   _

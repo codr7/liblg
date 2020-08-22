@@ -2,7 +2,11 @@
 #include <string.h>
 
 #include "lg/bset.h"
-#include "lg/val.h"
+#include "lg/util.h"
+
+static void *get_item(struct lg_bset *set, size_t i) {
+  return set->items ? LG_ALIGN(set->items, set->item_size) + set->item_size*i : NULL;
+}
 
 struct lg_bset *lg_bset_new(size_t size, lg_cmp_t cmp) {
   return lg_bset_init(malloc(sizeof(struct lg_bset)), size, cmp);
@@ -28,7 +32,7 @@ size_t lg_bset_find(struct lg_bset *set, void *key, bool *ok) {
 
   while (min < max) {
     const size_t i = (min+max)/2;
-    const void *v = set->items + i*set->item_size;
+    const void *v = get_item(set, i);
     const void *k = set->key ? set->key(v) : v;
 
     switch (set->cmp(key, k)) {
@@ -53,7 +57,7 @@ size_t lg_bset_find(struct lg_bset *set, void *key, bool *ok) {
 void *lg_bset_get(struct lg_bset *set, void *key) {
   bool ok = false;
   const size_t i = lg_bset_find(set, key, &ok);
-  return ok ? &set->items + i*set->item_size : NULL;
+  return ok ? get_item(set, i) : NULL;
 }
 
 static void grow(struct lg_bset *set, size_t cap) {
@@ -66,7 +70,7 @@ static void *insert(struct lg_bset *set, size_t i) {
     grow(set, set->cap*LG_BSET_GROWTH);
   }
 
-  uint8_t *const p = set->items + i*set->item_size;
+  uint8_t *const p = get_item(set, i);
   memmove(p+set->item_size, p, (set->len-i)*set->item_size);
   set->len++;
   return p;
