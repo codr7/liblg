@@ -38,10 +38,10 @@ void *lg_vec_push(struct lg_vec *vec) {
   return lg_vec_get(vec, vec->len++);
 }
 
-void *lg_vec_pop(struct lg_vec *vec) {
-  if (!vec->len) {
-    return NULL;
-  }
+void *lg_vec_peek(struct lg_vec *vec) {
+  return vec->len ? lg_vec_get(vec, vec->len-1) : NULL;
+}
 
-  return lg_vec_get(vec, --vec->len);
+void *lg_vec_pop(struct lg_vec *vec) {
+  return vec->len ? lg_vec_get(vec, --vec->len) : NULL;
 }

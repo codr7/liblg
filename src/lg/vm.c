@@ -1,86 +1,58 @@
 #include <stdlib.h>
 
 #include "lg/call.h"
-#include "lg/malloc.h"
 #include "lg/op.h"
 #include "lg/val.h"
 #include "lg/vm.h"
 
-static enum lg_cmp cmp_malloc(const void *x, const void *y) {
-  int xv = *(const lg_malloc_t *)x, yv = *(const lg_malloc_t *)y;
-
-  if (xv < yv) {
-    return LG_LT;
-  }
-
-  return (xv > yv) ? LG_GT : LG_EQ;
-}
-
-struct lg_vm *lg_vm_init(struct lg_vm *vm, size_t nops, size_t ncallstack, size_t nstack) {
-  vm->memory = NULL;
-  vm->memory_size = vm->memory_use = 0;
-  lg_bset_init(&vm->free, sizeof(lg_malloc_t), cmp_malloc);
-
-  lg_target_init(&vm->main, vm, "main", nops);
-  vm->target = &vm->main;
+struct lg_vm *lg_vm_init(struct lg_vm *vm) {
+  lg_target_init(&vm->main, vm, "main");
+  lg_vec_init(&vm->calls, sizeof(struct lg_call));
+  lg_vec_init(&vm->stack, sizeof(struct lg_val));
   vm->pc = 0;
-
-  vm->callstack = lg_malloc(vm, sizeof(struct lg_call), ncallstack) - vm->memory;
-  vm->csp = 0;
-
-  lg_stack_init(vm, nstack);
   vm->debug = false;
   return vm;
 }
 
 void lg_vm_deinit(struct lg_vm *vm) {
   lg_target_deinit(&vm->main);
-
-  if (vm->stack != -1) {
-    lg_free(vm, vm->stack);
-  }
-
-  if (vm->memory) {
-    free(vm->memory);
-  }
-
-  lg_bset_deinit(&vm->free);
+  lg_vec_deinit(&vm->calls);
+  lg_vec_deinit(&vm->stack); 
 }
 
-void lg_stack_init(struct lg_vm *vm, size_t n) {
-  vm->stack = lg_malloc(vm, sizeof(struct lg_val), n) - vm->memory;
-  vm->sp = 0;
+struct lg_target *lg_target(struct lg_vm *vm) {
+  return vm->calls.len ? lg_vec_peek(&vm->calls) : &vm->main;
 }
 
 struct lg_call *lg_push_call(struct lg_vm *vm) {
-  struct lg_call *c = (struct lg_call *)(vm->memory + vm->callstack) + vm->csp++;
-  c->target = vm->target;
+  struct lg_call *c = lg_vec_push(&vm->calls);
+  c->target = lg_target(vm);
   c->pc = vm->pc;
   return c;
 }
 
 struct lg_call *lg_peek_call(struct lg_vm *vm) {
-  return (struct lg_call *)(vm->memory + vm->callstack) + (vm->csp-1);
+  return lg_vec_peek(&vm->calls);
 }
 
 struct lg_call *lg_pop_call(struct lg_vm *vm) {
-  return (struct lg_call *)(vm->memory + vm->callstack) + --vm->csp;
+  return lg_vec_pop(&vm->calls);
 }
 
 struct lg_val *lg_push(struct lg_vm *vm) {
-  return (struct lg_val *)(vm->memory + vm->stack) + vm->sp++;
+  return lg_vec_push(&vm->stack);
 }
 
 struct lg_val *lg_peek(struct lg_vm *vm) {
-  return (struct lg_val *)(vm->memory + vm->stack) + (vm->sp-1);
+  return lg_vec_peek(&vm->stack); 
 }
 
 struct lg_val *lg_pop(struct lg_vm *vm) {
-  return (struct lg_val *)(vm->memory + vm->stack) + --vm->sp;
+  return lg_vec_pop(&vm->stack); 
 }
 
 #define LG_DISPATCH()						\
-  op = (struct lg_op *)(vm->memory + vm->target->offset) + vm->pc++;	\
+  op = lg_vec_get(&lg_target(vm)->ops, vm->pc++);		\
   goto *dispatch[op->code]
 
 void lg_exec(struct lg_vm *vm, size_t start_pc) {
@@ -108,7 +80,7 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
       ct = lg_pop(vm)->as_target;
       break;
     default:
-      ct = vm->target;
+      ct = lg_target(vm);
       break;
     }
     
@@ -140,7 +112,6 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
   }
  ret: {
     struct lg_call *c = lg_pop_call(vm);
-    vm->target = c->target;
     vm->pc = c->pc;
   }
  stop: {}

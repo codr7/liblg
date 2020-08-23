@@ -2,7 +2,6 @@
 #include <stdio.h>
 
 #include "lg/init.h"
-#include "lg/malloc.h"
 #include "lg/op.h"
 #include "lg/target.h"
 #include "lg/types/int.h"
@@ -17,7 +16,7 @@ void fib_tests(struct lg_vm *vm) {
   lg_val_init(&op->as_push.val, &lg_int_type)->as_int = 10;
   
   struct lg_target f;
-  lg_target_init(&f, vm, "fib", 10);
+  lg_target_init(&f, vm, "fib");
   op = lg_emit(&vm->main, LG_PUSH);
   lg_val_init(&op->as_push.val, &lg_target_type)->as_target = &f;
   lg_emit(&vm->main, LG_CALL)->as_call.mode = LG_CALL_STACK;
@@ -61,11 +60,8 @@ void fib_tests(struct lg_vm *vm) {
 int main() {
   lg_init();
   struct lg_vm vm;
-  lg_vm_init(&vm, 100, 100, 100);
+  lg_vm_init(&vm);
   vm.debug = true;
-
-  void *p = lg_malloc(&vm, 10, 1);
-  lg_free(&vm, p - (void *)vm.memory);
 
   size_t start_pc = vm.pc;
   lg_emit(&vm.main, LG_ADD);

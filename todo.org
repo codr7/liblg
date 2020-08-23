@@ -1,7 +1,3 @@
-* remove vm.free/memory
-* use vec for target ops
-* add lg_text struct
-** vec ops
 * test fib
 ** inline call target
 ** add inc/dec ops

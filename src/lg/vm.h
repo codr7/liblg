@@ -4,25 +4,24 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#include "lg/bset.h"
 #include "lg/op.h"
 #include "lg/target.h"
+#include "lg/vec.h"
 
 struct lg_val;
 
 struct lg_vm {
-  uint8_t *memory;
-  size_t memory_size, memory_use;
-  struct lg_bset free;
-  struct lg_target main, *target;
-  ptrdiff_t callstack, stack;
-  size_t pc, csp, sp;
+  struct lg_target main;
+  struct lg_vec calls;
+  struct lg_vec stack;
+  size_t pc;
   bool debug;
 };
 
-struct lg_vm *lg_vm_init(struct lg_vm *vm, size_t nops, size_t ncallstack, size_t nstack);
+struct lg_vm *lg_vm_init(struct lg_vm *vm);
 void lg_vm_deinit(struct lg_vm *vm);
-void lg_stack_init(struct lg_vm *vm, size_t n);
+
+struct lg_target *lg_target(struct lg_vm *vm);
 
 struct lg_call *lg_push_call(struct lg_vm *vm);
 struct lg_call *lg_peek_call(struct lg_vm *vm);
