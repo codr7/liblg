@@ -22,13 +22,11 @@ static void fib_tests(struct lg_vm *vm) {
   op->as_call.mode = LG_CALL_IMMEDIATE;
   op->as_call.target = &f;
   
-  lg_emit(&f, LG_CP);
   size_t zero_pc = f.ops.len;
   op = lg_emit(&f, LG_BRINT);
   op->as_brint.cond = 0;
   op->as_brint.false_pc = f.ops.len;
   
-  lg_emit(&f, LG_CP);
   size_t one_pc = f.ops.len;
   op = lg_emit(&f, LG_BRINT);
   op->as_brint.cond = 1;
