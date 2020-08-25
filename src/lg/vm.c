@@ -44,12 +44,11 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
   static void* dispatch[] = {NULL,
 			     &&add,
 			     &&brint,
-			     &&call, &&clone, &&cp,
+			     &&call, &&cp,
 			     &&dec,
-			     &&inc,
 			     &&push,
 			     &&ret,
-			     &&stop, &&sub, &&swap};
+			     &&stop, &&swap};
   
   struct lg_op *op = NULL;
   vm->pc = start_pc;
@@ -75,12 +74,6 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
       tgt = op->as_call.target;
       break;
     }
-    case LG_CALL_STACK: {
-      struct lg_val *v = lg_pop(vm);
-      tgt = v->as_target;
-      lg_val_deinit(v);
-      break;
-    }
     default: {
       tgt = vm->target;
       break;
@@ -90,26 +83,12 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
     lg_call(vm, tgt);
     LG_DISPATCH();
   }
- clone: {
-    lg_clone(vm, *lg_peek(vm));
-    LG_DISPATCH();
-  }
  cp: {
     lg_cp(vm, *lg_peek(vm));
     LG_DISPATCH();
   }
  dec: {
     lg_peek(vm)->as_int--;
-    LG_DISPATCH();
-  }
- inc: {
-    lg_peek(vm)->as_int++;
-    LG_DISPATCH();
-  }
- sub: {
-    struct lg_val y = *lg_pop(vm);
-    lg_sub(vm, lg_peek(vm), y);
-    lg_val_deinit(&y);
     LG_DISPATCH();
   }
  swap: {
