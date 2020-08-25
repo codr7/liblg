@@ -62,24 +62,12 @@ static void fib_tests(struct lg_vm *vm) {
   lg_target_deinit(&f);
 }
 
-void add_tests(struct lg_vm *vm) {
-  size_t start_pc = vm->main.ops.len;
-  lg_emit(&vm->main, LG_ADD);
-  lg_emit(&vm->main, LG_STOP);
-
-  lg_val_init(lg_push(vm), &lg_int_type)->as_int = 7;
-  lg_val_init(lg_push(vm), &lg_int_type)->as_int = 35;
-  
-  lg_exec(vm, start_pc);
-  assert(lg_pop(vm)->as_int == 42);
-}
-
 int main() {
   lg_init();
   struct lg_vm vm;
   lg_vm_init(&vm);
   vm.debug = true;
-  
+
   fib_tests(&vm);
   
   lg_vm_deinit(&vm);
