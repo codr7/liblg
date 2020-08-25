@@ -1,3 +1,2 @@
 * fib
-** inline call target
 ** add inc/dec ops

@@ -11,21 +11,14 @@
 struct lg_val;
 
 struct lg_vm {
-  struct lg_target main;
-  struct lg_vec calls;
-  struct lg_vec stack;
+  struct lg_target main, *target;
+  struct lg_vec calls, stack;
   size_t pc;
   bool debug;
 };
 
 struct lg_vm *lg_vm_init(struct lg_vm *vm);
 void lg_vm_deinit(struct lg_vm *vm);
-
-struct lg_target *lg_target(struct lg_vm *vm);
-
-struct lg_call *lg_push_call(struct lg_vm *vm, struct lg_target *target);
-struct lg_call *lg_peek_call(struct lg_vm *vm);
-struct lg_call *lg_pop_call(struct lg_vm *vm);
 
 struct lg_val *lg_push(struct lg_vm *vm);
 struct lg_val *lg_peek(struct lg_vm *vm);

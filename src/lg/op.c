@@ -1,7 +1,9 @@
 #include <assert.h>
 
+#include "lg/call.h"
 #include "lg/error.h"
 #include "lg/op.h"
+#include "lg/target.h"
 #include "lg/type.h"
 #include "lg/val.h"
 #include "lg/vm.h"
@@ -11,8 +13,8 @@ struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code) {
   return op;
 }
 
-bool lg_add(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
-  struct lg_type *t = x.type;
+bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
+  struct lg_type *t = x->type;
 
   if (y.type != t) {
     lg_error(vm, "Expected type %s, actual %s", t->id, y.type->id);
@@ -40,7 +42,9 @@ bool lg_eq(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
 }
 
 void lg_call(struct lg_vm *vm, struct lg_target *tgt) {
-  lg_push_call(vm, tgt);
+  struct lg_call *c = lg_vec_push(&vm->calls);
+  c->target = vm->target = tgt;
+  c->ret_pc = vm->pc;
   vm->pc = 0;
 }
 
@@ -69,9 +73,9 @@ struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src) {
 
   return dst;
 }
-	     
-bool lg_sub(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
-  struct lg_type *t = x.type;
+
+bool lg_sub(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
+  struct lg_type *t = x->type;
 
   if (y.type != t) {
     lg_error(vm, "Expected type %s, actual %s", t->id, y.type->id);

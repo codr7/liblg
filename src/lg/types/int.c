@@ -5,12 +5,12 @@
 
 struct lg_type lg_int_type;
 
-void add_imp(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
-  lg_val_init(lg_push(vm), &lg_int_type)->as_int = x.as_int + y.as_int;
+void add_imp(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
+  x->as_int += y.as_int;
 }
 
-void sub_imp(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
-  lg_val_init(lg_push(vm), &lg_int_type)->as_int = x.as_int - y.as_int;
+void sub_imp(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
+  x->as_int -= y.as_int;
 }
 
 void lg_int_type_init() {

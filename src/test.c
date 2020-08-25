@@ -17,11 +17,10 @@ static void fib_tests(struct lg_vm *vm) {
   lg_val_init(&op->as_push.val, &lg_int_type)->as_int = 20;
 
   struct lg_target f;
-
   lg_target_init(&f, "fib");
-  op = lg_emit(&vm->main, LG_PUSH);
-  lg_val_init(&op->as_push.val, &lg_target_type)->as_target = &f;
-  lg_emit(&vm->main, LG_CALL)->as_call.mode = LG_CALL_STACK;
+  op = lg_emit(&vm->main, LG_CALL);
+  op->as_call.mode = LG_CALL_IMMEDIATE;
+  op->as_call.target = &f;
   
   lg_emit(&f, LG_CP);
   size_t zero_pc = f.ops.len;
