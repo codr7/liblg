@@ -5,8 +5,7 @@
 #include "lg/util.h"
 #include "lg/vm.h"
 
-struct lg_target *lg_target_init(struct lg_target *tgt, struct lg_vm *vm, const char *id) {
-  tgt->vm = vm;
+struct lg_target *lg_target_init(struct lg_target *tgt, const char *id) {
   tgt->id = lg_strdup(id, NULL);
   lg_vec_init(&tgt->ops, sizeof(struct lg_op));
   return tgt;

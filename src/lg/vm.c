@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "lg/call.h"
@@ -6,7 +7,7 @@
 #include "lg/vm.h"
 
 struct lg_vm *lg_vm_init(struct lg_vm *vm) {
-  lg_target_init(&vm->main, vm, "main");
+  lg_target_init(&vm->main, "main");
   lg_vec_init(&vm->calls, sizeof(struct lg_call));
   lg_vec_init(&vm->stack, sizeof(struct lg_val));
   vm->pc = 0;
@@ -21,13 +22,18 @@ void lg_vm_deinit(struct lg_vm *vm) {
 }
 
 struct lg_target *lg_target(struct lg_vm *vm) {
-  return vm->calls.len ? lg_vec_peek(&vm->calls) : &vm->main;
+  if (!vm->calls.len) {
+    return &vm->main;
+  }
+
+  struct lg_call *c = lg_vec_peek(&vm->calls);
+  return c->target;
 }
 
-struct lg_call *lg_push_call(struct lg_vm *vm) {
+struct lg_call *lg_push_call(struct lg_vm *vm, struct lg_target *target) {
   struct lg_call *c = lg_vec_push(&vm->calls);
-  c->target = lg_target(vm);
-  c->pc = vm->pc;
+  c->target = target;
+  c->ret_pc = vm->pc;
   return c;
 }
 
@@ -51,8 +57,8 @@ struct lg_val *lg_pop(struct lg_vm *vm) {
   return lg_vec_pop(&vm->stack); 
 }
 
-#define LG_DISPATCH()						\
-  op = lg_vec_get(&lg_target(vm)->ops, vm->pc++);		\
+#define LG_DISPATCH()							\
+  op = lg_vec_get(&lg_target(vm)->ops, vm->pc++);			\
   goto *dispatch[op->code]
 
 void lg_exec(struct lg_vm *vm, size_t start_pc) {
@@ -71,20 +77,20 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
  brint: {
     vm->pc = (op->as_brint.cond == lg_pop(vm)->as_int) ? op->as_brint.true_pc : op->as_brint.false_pc;
     LG_DISPATCH(); 
- }
+  }
  call: {
-    struct lg_target *ct = NULL;
+    struct lg_target *tgt = NULL;
     
     switch (op->as_call.mode) {
     case LG_CALL_STACK:
-      ct = lg_pop(vm)->as_target;
+      tgt = lg_pop(vm)->as_target;
       break;
     default:
-      ct = lg_target(vm);
+      tgt = lg_target(vm);
       break;
     }
-    
-    lg_call(ct);
+
+    lg_call(vm, tgt);
     LG_DISPATCH();
   }
  clone: {
@@ -97,6 +103,11 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
   }
  sub: {
     struct lg_val y = *lg_pop(vm), x = *lg_pop(vm);
+
+    if (x.as_int < 0) {
+      abort();
+    }
+    
     lg_sub(vm, x, y);
     lg_val_deinit(&x);
     lg_val_deinit(&y);
@@ -112,7 +123,8 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
   }
  ret: {
     struct lg_call *c = lg_pop_call(vm);
-    vm->pc = c->pc;
+    vm->pc = c->ret_pc;
+    LG_DISPATCH();
   }
  stop: {}
 }

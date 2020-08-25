@@ -1,7 +1,3 @@
-* test fib
+* fib
 ** inline call target
 ** add inc/dec ops
-
-method fib(0)   _
-method fib(1)   _
-method fib(Int) {-1! $copy fib $swap -1! fib +}

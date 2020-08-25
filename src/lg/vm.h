@@ -23,7 +23,7 @@ void lg_vm_deinit(struct lg_vm *vm);
 
 struct lg_target *lg_target(struct lg_vm *vm);
 
-struct lg_call *lg_push_call(struct lg_vm *vm);
+struct lg_call *lg_push_call(struct lg_vm *vm, struct lg_target *target);
 struct lg_call *lg_peek_call(struct lg_vm *vm);
 struct lg_call *lg_pop_call(struct lg_vm *vm);
 

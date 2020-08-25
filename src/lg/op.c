@@ -39,18 +39,19 @@ bool lg_eq(struct lg_vm *vm, struct lg_val x, struct lg_val y) {
   return t->eq_imp(x, y);
 }
 
-void lg_call(struct lg_target *tgt) {
-  struct lg_vm *vm = tgt->vm;
-  lg_push_call(vm);
+void lg_call(struct lg_vm *vm, struct lg_target *tgt) {
+  lg_push_call(vm, tgt);
   vm->pc = 0;
 }
 
 struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src) {  
   struct lg_val *dst = lg_push(vm);
-  *dst = src;
 
   if (src.type->clone_imp) {
+    dst->type = src.type;
     src.type->clone_imp(vm, *dst, src);
+  } else {
+    *dst = src;
   }
 
   return dst;
@@ -58,10 +59,12 @@ struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src) {
 
 struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src) {
   struct lg_val *dst = lg_push(vm);
-  *dst = src;
 
   if (src.type->cp_imp) {
+    dst->type = src.type;
     src.type->cp_imp(vm, *dst, src);
+  } else {
+    *dst = src;
   }
 
   return dst;
