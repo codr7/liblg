@@ -7,7 +7,14 @@
 
 #include "lg/val.h"
 
-enum lg_op_code {LG_ADD=1, LG_BRINT, LG_CALL, LG_CLONE, LG_CP, LG_PUSH, LG_RET, LG_STOP, LG_SUB, LG_SWAP};
+enum lg_op_code {LG_ADD=1,
+		 LG_BRINT,
+		 LG_CALL, LG_CLONE, LG_CP,
+		 LG_DEC,
+		 LG_INC,
+		 LG_PUSH,
+		 LG_RET,
+		 LG_STOP, LG_SUB, LG_SWAP};
 
 enum lg_call_mode {LG_CALL_IMMEDIATE, LG_CALL_RECURSIVE, LG_CALL_STACK};
 
@@ -39,7 +46,6 @@ struct lg_vm;
 
 struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code);
 bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y);
-bool lg_eq(struct lg_vm *vm, struct lg_val x, struct lg_val y);
 void lg_call(struct lg_vm *vm, struct lg_target *tgt);
 struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src);
 struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src);

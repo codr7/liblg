@@ -41,7 +41,16 @@ struct lg_val *lg_pop(struct lg_vm *vm) {
   goto *dispatch[op->code]
 
 void lg_exec(struct lg_vm *vm, size_t start_pc) {
-  static void* dispatch[] = {NULL, &&add, &&brint, &&call, &&clone, &&cp, &&push, &&ret, &&stop, &&sub, &&swap};
+  static void* dispatch[] = {NULL,
+			     &&add,
+			     &&brint,
+			     &&call, &&clone, &&cp,
+			     &&dec,
+			     &&inc,
+			     &&push,
+			     &&ret,
+			     &&stop, &&sub, &&swap};
+  
   struct lg_op *op = NULL;
   vm->pc = start_pc;
   LG_DISPATCH();
@@ -87,6 +96,14 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
   }
  cp: {
     lg_cp(vm, *lg_peek(vm));
+    LG_DISPATCH();
+  }
+ dec: {
+    lg_peek(vm)->as_int--;
+    LG_DISPATCH();
+  }
+ inc: {
+    lg_peek(vm)->as_int++;
     LG_DISPATCH();
   }
  sub: {

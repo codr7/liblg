@@ -34,18 +34,11 @@ static void fib_tests(struct lg_vm *vm) {
   op->as_brint.cond = 1;
   op->as_brint.false_pc = f.ops.len;
 
-  op = lg_emit(&f, LG_PUSH);
-  lg_val_init(&op->as_push.val, &lg_int_type)->as_int = 1;
-  lg_emit(&f, LG_SUB);
-  
+  lg_emit(&f, LG_DEC);
   lg_emit(&f, LG_CP);
   lg_emit(&f, LG_CALL)->as_call.mode = LG_CALL_RECURSIVE;
   lg_emit(&f, LG_SWAP);
-  
-  op = lg_emit(&f, LG_PUSH);
-  lg_val_init(&op->as_push.val, &lg_int_type)->as_int = 1;
-  lg_emit(&f, LG_SUB);
-
+  lg_emit(&f, LG_DEC);
   lg_emit(&f, LG_CALL)->as_call.mode = LG_CALL_RECURSIVE;
   lg_emit(&f, LG_ADD);
 
