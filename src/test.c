@@ -6,7 +6,6 @@
 #include "lg/target.h"
 #include "lg/timer.h"
 #include "lg/types/int.h"
-#include "lg/types/target.h"
 #include "lg/val.h"
 #include "lg/vm.h"
 

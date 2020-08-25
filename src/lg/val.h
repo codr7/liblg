@@ -10,9 +10,7 @@ struct lg_val {
   struct lg_type *type;
   
   union {
-    bool as_bool;
     int64_t as_int;
-    struct lg_target *as_target;
   };
 };
 
