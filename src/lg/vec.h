@@ -8,7 +8,7 @@
 
 struct lg_vec {
   size_t item_size, cap, len;
-  uint8_t *items;
+  uint8_t *items, *end;
 };
 
 struct lg_vec *lg_vec_init(struct lg_vec *vec, size_t size);

@@ -64,9 +64,7 @@ struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src) {
 }
 
 void lg_swap(struct lg_vm *vm) {
-  struct lg_val *y = lg_peek(vm), *x = lg_peek(vm)-1; 
-
-  struct lg_val tmp = *x;
+  struct lg_val *y = lg_peek(vm), *x = y-1, tmp = *x;
   *x = *y;
   *y = tmp;
 }
