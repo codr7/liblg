@@ -13,7 +13,7 @@ struct lg_vm *lg_vm_init(struct lg_vm *vm) {
   lg_vec_init(&vm->calls, sizeof(struct lg_call));
   lg_vec_init(&vm->stack, sizeof(struct lg_val));
 
-  vm->pc = 0;
+  vm->pc = NULL;
   vm->debug = false;
   return vm;
 }
@@ -37,7 +37,7 @@ struct lg_val *lg_pop(struct lg_vm *vm) {
 }
 
 #define LG_DISPATCH()				\
-  op = lg_vec_get(&vm->target->ops, vm->pc++);	\
+  op = vm->pc++;				\
   goto *dispatch[op->code]
 
 void lg_exec(struct lg_vm *vm, size_t start_pc) {
@@ -51,7 +51,7 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
 			     &&stop, &&swap};
   
   struct lg_op *op = NULL;
-  vm->pc = start_pc;
+  vm->pc = lg_vec_get(&vm->target->ops, start_pc);
   LG_DISPATCH();
   
  add: {
@@ -62,7 +62,8 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
   }
  brint: {
     struct lg_val *v = lg_peek(vm);
-    vm->pc = (op->as_brint.cond == v->as_int) ? op->as_brint.true_pc : op->as_brint.false_pc;
+    vm->pc = lg_vec_get(&vm->target->ops,
+			(op->as_brint.cond == v->as_int) ? op->as_brint.true_pc : op->as_brint.false_pc);
     LG_DISPATCH(); 
   }
  call: {

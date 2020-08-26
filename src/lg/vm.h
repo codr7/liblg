@@ -13,7 +13,7 @@ struct lg_val;
 struct lg_vm {
   struct lg_target main, *target;
   struct lg_vec calls, stack;
-  size_t pc;
+  struct lg_op *pc;
   bool debug;
 };
 

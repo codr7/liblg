@@ -5,7 +5,7 @@
 
 struct lg_call {
   struct lg_target *target;
-  size_t ret_pc;
+  struct lg_op * ret_pc;
 };
 
 #endif
