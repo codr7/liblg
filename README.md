@@ -1,5 +1,5 @@
 ### intro
-The goal of [liblg](https://github.com/codr7/liblg) is to create a minimal stack based VM in C with decent performance while keeping the design simple, extendable and easy to reason about. It currently implements just enough functionality to run a recursive Fibonacci algorithm.
+The goal of [liblg](https://github.com/codr7/liblg) is to create a minimal stack based VM in C with decent performance while keeping the design simple, extendable and easy to reason about. It currently implements just enough functionality to run recursive Fibonacci.
 
 ### setup
 [liblg](https://github.com/codr7/liblg) requires a C compiler and CMake to build.
