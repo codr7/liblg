@@ -7,7 +7,7 @@
 struct lg_vec *lg_vec_init(struct lg_vec *vec, size_t item_size) {
   vec->item_size = item_size;
   vec->cap = vec->len = 0;
-  vec->items = vec->end = NULL;
+  vec->items = vec->start = vec->end = NULL;
   return vec;
 }
 
@@ -20,7 +20,8 @@ void lg_vec_deinit(struct lg_vec *vec) {
 void lg_vec_grow(struct lg_vec *vec, size_t cap) {
   vec->cap = cap ? cap : LG_VEC_GROWTH;
   vec->items = realloc(vec->items, vec->item_size*(vec->cap+1));
-  vec->end = LG_ALIGN(vec->items, vec->item_size) + vec->item_size*vec->len;
+  vec->start = LG_ALIGN(vec->items, vec->item_size);
+  vec->end = vec->start + vec->item_size*vec->len;
 }
 
 void lg_vec_clear(struct lg_vec *vec) {
@@ -29,7 +30,7 @@ void lg_vec_clear(struct lg_vec *vec) {
 }
 
 void *lg_vec_get(struct lg_vec *vec, size_t i) {
-  return vec->items ? LG_ALIGN(vec->items, vec->item_size) + vec->item_size*i : NULL;
+  return vec->items ? vec->start + vec->item_size*i : NULL;
 }
 
 void *lg_vec_push(struct lg_vec *vec) {

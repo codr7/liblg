@@ -1,1 +1,6 @@
+* deinit calls in vm
+** add call_init/deinit
+* convert lg_type to use ref counting
+** add .refs
+** rename deinit to deref
 

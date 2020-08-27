@@ -13,6 +13,16 @@ struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code) {
   return op;
 }
 
+void lg_op_deinit(struct lg_op *op) {
+  switch (op->code) {
+  case LG_PUSH:
+    lg_val_deinit(&op->as_push.val);
+    break;
+  default:
+    break;
+  }
+}
+
 bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
   struct lg_type *t = x->type;
 

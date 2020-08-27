@@ -13,6 +13,11 @@ struct lg_target *lg_target_init(struct lg_target *tgt, const char *id) {
 
 void lg_target_deinit(struct lg_target *tgt) {
   free(tgt->id);
+
+  LG_VEC_DO(&tgt->ops, struct lg_op *, op) {
+    lg_op_deinit(op);
+  }
+  
   lg_vec_deinit(&tgt->ops);
 }
 

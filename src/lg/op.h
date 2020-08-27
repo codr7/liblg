@@ -44,6 +44,7 @@ struct lg_op {
 struct lg_vm;
 
 struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code);
+void lg_op_deinit(struct lg_op *op);
 bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y);
 void lg_call(struct lg_vm *vm, struct lg_target *tgt);
 struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src);

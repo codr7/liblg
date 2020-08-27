@@ -21,6 +21,11 @@ struct lg_vm *lg_vm_init(struct lg_vm *vm) {
 void lg_vm_deinit(struct lg_vm *vm) {
   lg_target_deinit(&vm->main);
   lg_vec_deinit(&vm->calls);
+
+  LG_VEC_DO(&vm->stack, struct lg_val *, v) {
+    lg_val_deinit(v);
+  }
+  
   lg_vec_deinit(&vm->stack); 
 }
 
