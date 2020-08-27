@@ -61,9 +61,10 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
     LG_DISPATCH();
   }
  brint: {
-    struct lg_val *v = lg_peek(vm);
     vm->pc = lg_vec_get(&vm->target->ops,
-			(op->as_brint.cond == v->as_int) ? op->as_brint.true_pc : op->as_brint.false_pc);
+			(op->as_brint.cond == lg_peek(vm)->as_int)
+			? op->as_brint.true_pc
+			: op->as_brint.false_pc);
     LG_DISPATCH(); 
   }
  call: {
