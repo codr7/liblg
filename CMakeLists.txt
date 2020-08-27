@@ -14,11 +14,6 @@ target_compile_options(test PUBLIC -O2 -g)
 target_include_directories(test PUBLIC src/)
 target_link_libraries(test)
 
-add_executable(liblg ${src} src/main.c)
-target_compile_options(liblg PUBLIC -O2 -g)
-target_include_directories(liblg PUBLIC src/)
-target_link_libraries(liblg)
-
 file(GLOB inc src/lg/*.h)
 install(FILES ${inc} DESTINATION include/lg)
 install(FILES build/liblg.a DESTINATION lib)
