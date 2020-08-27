@@ -29,9 +29,9 @@ $ go run fib.go
 ### design
 The core loop uses computed goto, which means that new instructions must be added in identical order [here](https://github.com/codr7/liblg/blob/master/src/lg/op.h) and [here](https://github.com/codr7/liblg/blob/master/src/lg/vm.c).
 
-Fundamental types are not tied to a specific VM instance. New types may be added [here](https://github.com/codr7/liblg/tree/master/src/lg/types) and initialized [here](https://github.com/codr7/liblg/blob/master/src/lg/init.c).
+Fundamental types are global (as in not tied to a specific VM instance), new types may be added [here](https://github.com/codr7/liblg/tree/master/src/lg/types) and initialized [here](https://github.com/codr7/liblg/blob/master/src/lg/init.c).
 
-Values are represented as tagged [unions](https://github.com/codr7/liblg/blob/master/src/lg/val.h).
+[Values](https://github.com/codr7/liblg/blob/master/src/lg/val.h) are represented as tagged unions.
 
 ### license
 [MIT](https://github.com/codr7/liblg/blob/master/LICENSE.txt)
