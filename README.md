@@ -1,5 +1,5 @@
 ### intro
-The goal of [liblg](https://github.com/codr7/liblg) is to create a minimal stack based VM in C with decent performance while keeping the design simple, extendable and easy to reason about. It currently implements just enough functionality to do recursive Fibonacci (with tail call optimization) and comes equipped with a custom assembler. The general idea is that it's useful to have access to extensible core vm functionality in a tight package, for implementing custom DSLs etc.
+The goal of [liblg](https://github.com/codr7/liblg) is to create a reasonably fast, minimal stack based VM in C. It implements just enough functionality to do recursive Fibonacci (with tail call optimization) and comes equipped with a custom assembler. The general idea is that it's very useful to have access to extensible core stack vm functionality in library form, for implementing custom DSLs on top etc.
 
 ### setup
 [liblg](https://github.com/codr7/liblg) requires a C compiler and CMake to build.
