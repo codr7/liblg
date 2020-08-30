@@ -4,6 +4,7 @@
 #include "lg/error.h"
 #include "lg/op.h"
 #include "lg/target.h"
+#include "lg/stack.h"
 #include "lg/type.h"
 #include "lg/val.h"
 #include "lg/vm.h"
@@ -46,8 +47,8 @@ void lg_call(struct lg_vm *vm, struct lg_target *tgt) {
   vm->pc = lg_vec_get(&tgt->ops, 0);
 }
 
-struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src) {  
-  struct lg_val *dst = lg_push(vm);
+struct lg_val *lg_clone(struct lg_vm *vm, struct lg_stack *stack, struct lg_val src) {  
+  struct lg_val *dst = lg_push(stack);
 
   if (src.type->clone_imp) {
     dst->type = src.type;
@@ -59,8 +60,8 @@ struct lg_val *lg_clone(struct lg_vm *vm, struct lg_val src) {
   return dst;
 }
 
-struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src) {
-  struct lg_val *dst = lg_push(vm);
+struct lg_val *lg_cp(struct lg_vm *vm, struct lg_stack *stack, struct lg_val src) {
+  struct lg_val *dst = lg_push(stack);
 
   if (src.type->cp_imp) {
     dst->type = src.type;
@@ -70,10 +71,4 @@ struct lg_val *lg_cp(struct lg_vm *vm, struct lg_val src) {
   }
 
   return dst;
-}
-
-void lg_swap(struct lg_vm *vm) {
-  struct lg_val *y = lg_peek(vm), *x = y-1, tmp = *x;
-  *x = *y;
-  *y = tmp;
 }

@@ -8,6 +8,7 @@
 struct lg_target *lg_target_init(struct lg_target *tgt, const char *id) {
   tgt->id = lg_strdup(id, NULL);
   lg_vec_init(&tgt->ops, sizeof(struct lg_op));
+  tgt->refs = 1;
   return tgt;
 }
 

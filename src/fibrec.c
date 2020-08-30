@@ -3,13 +3,14 @@
 
 #include "lg/init.h"
 #include "lg/op.h"
+#include "lg/stack.h"
 #include "lg/target.h"
 #include "lg/timer.h"
 #include "lg/types/int.h"
 #include "lg/val.h"
 #include "lg/vm.h"
 
-static void fib(struct lg_vm *vm) {
+static void fib(struct lg_vm *vm, struct lg_stack *stack) {
   size_t start_pc = vm->main.ops.len;
 
   struct lg_op *op = lg_emit(&vm->main, LG_PUSH);
@@ -51,8 +52,8 @@ static void fib(struct lg_vm *vm) {
   lg_timer_init(&t);
     
   for (int i = 0; i < 100; i++) {
-    lg_exec(vm, start_pc);
-    assert(lg_pop(vm)->as_int == 6765);
+    lg_exec(vm, stack, start_pc);
+    assert(lg_pop(stack)->as_int == 6765);
   }
   
   printf("%luus\n", lg_timer_usecs(&t));
@@ -64,7 +65,10 @@ int main() {
   struct lg_vm vm;
   lg_vm_init(&vm);
   vm.debug = true;
-  fib(&vm);
+  struct lg_stack stack;
+  lg_stack_init(&stack);
+  fib(&vm, &stack);
+  lg_stack_deinit(&stack);
   lg_vm_deinit(&vm);
   lg_deinit();
   return 0;
