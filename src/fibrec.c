@@ -9,7 +9,7 @@
 #include "lg/val.h"
 #include "lg/vm.h"
 
-static void fib_tests(struct lg_vm *vm) {
+static void fib(struct lg_vm *vm) {
   size_t start_pc = vm->main.ops.len;
 
   struct lg_op *op = lg_emit(&vm->main, LG_PUSH);
@@ -64,9 +64,7 @@ int main() {
   struct lg_vm vm;
   lg_vm_init(&vm);
   vm.debug = true;
-
-  fib_tests(&vm);
-  
+  fib(&vm);
   lg_vm_deinit(&vm);
   lg_deinit();
   return 0;

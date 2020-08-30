@@ -14,6 +14,11 @@
       _p ? ((t *)(_p - offsetof(t, m))) : NULL;	\
     })
 
+#define LG_DEREF(prefix, x)			\
+  if (!--(x)->refs) {				\
+    LG_ID(LG_ID(lg_, prefix), _deinit)(x);	\
+  }
+
 #define _LG_ID(x, y)				\
   x##y
 
@@ -31,6 +36,9 @@
       __auto_type _y = y;			\
       _x < _y ? _x : _y;			\
     })						\
+
+#define LG_REF(x)				\
+  ((x)->refs++, x)				\
 
 #define LG_UNIQUE(x)				\
   LG_ID(x, __COUNTER__)

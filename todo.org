@@ -1,14 +1,17 @@
-* add lgasm target
-** cidk
-** asm.h/c
+* finish lg_asm()
+** bench/fibtail.lga
+* handle nested targets
+** drop from env & deref on exit
 * add tail call optimization
-* add fibtail.lga
-** bench
+** add bool lg_tco(struct lg_target *tgt, struct lg_op* op)
+*** add bool lg_op.tco(struct lg_op *op)
+**** return true if op may be optimized
+*** check tgt->ops.end
+** reuse current lg_call instead of pushing new in call op if rest of target is lg_tco()
+* rename test target to fibrec
+** rename bench/fib.py/go
+* fibtail bench go python
 * convert lg_type to use ref counting
 ** add .refs
 ** rename deinit to deref
-* convert lg_target to use ref counting
-** add .refs
-** rename deinit to deref
-** deref in call
 

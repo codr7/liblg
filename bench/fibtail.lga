@@ -1,0 +1,21 @@
+begin fib
+  brint 2 0 exit0
+  brint 2 1 exit1
+  dec 2
+  swap
+  add 0 1
+  call fib
+  ret
+exit0:
+  swap
+  drop 2 2
+  ret
+exit1:
+  drop 2 2
+  swap
+  drop
+  ret
+end
+
+push 20 0 1
+call fib
