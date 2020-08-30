@@ -41,9 +41,8 @@ bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
 }
 
 void lg_call(struct lg_vm *vm, struct lg_target *tgt) {
-  struct lg_call *c = lg_vec_push(&vm->calls);
-  c->target = vm->target = tgt;
-  c->ret_pc = vm->pc;
+  lg_call_init(lg_vec_push(&vm->calls), tgt, vm->pc);
+  vm->target = tgt;
   vm->pc = lg_vec_get(&tgt->ops, 0);
 }
 

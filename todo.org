@@ -1,6 +1,14 @@
-* deinit calls in vm
-** add call_init/deinit
+* add lgasm target
+** cidk
+** asm.h/c
+* add tail call optimization
+* add fibtail.lga
+** bench
 * convert lg_type to use ref counting
 ** add .refs
 ** rename deinit to deref
+* convert lg_target to use ref counting
+** add .refs
+** rename deinit to deref
+** deref in call
 

@@ -20,6 +20,11 @@ struct lg_vm *lg_vm_init(struct lg_vm *vm) {
 
 void lg_vm_deinit(struct lg_vm *vm) {
   lg_target_deinit(&vm->main);
+
+  LG_VEC_DO(&vm->calls, struct lg_call *, c) {
+    lg_call_deinit(c);
+  }
+
   lg_vec_deinit(&vm->calls);
 
   LG_VEC_DO(&vm->stack, struct lg_val *, v) {
@@ -108,7 +113,8 @@ void lg_exec(struct lg_vm *vm, size_t start_pc) {
  ret: {
     struct lg_call *c = lg_vec_pop(&vm->calls);
     vm->pc = c->ret_pc;
-
+    lg_call_deinit(c);
+    
     if (vm->calls.len) {
       struct lg_call *c = lg_vec_peek(&vm->calls);
       vm->target = c->target;
