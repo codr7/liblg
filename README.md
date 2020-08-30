@@ -30,9 +30,9 @@ The VM is currently around 40% faster than Python3 and 14 times as slow as Go, i
 
 ```
 $ cd bench
-$ python3 fib.py
+$ python3 fibrec.py
 353813us
-$ go run fib.go
+$ go run fibrec.go
 14170us
 ```
 
