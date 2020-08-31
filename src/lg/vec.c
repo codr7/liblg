@@ -57,3 +57,14 @@ void *lg_vec_pop(struct lg_vec *vec) {
   vec->len--;
   return vec->end;
 }
+
+void *lg_vec_insert(struct lg_vec *vec, size_t i) {
+  if (vec->len == vec->cap) {
+    lg_vec_grow(vec, vec->cap*LG_VEC_GROWTH);
+  } 
+
+  uint8_t *const p = lg_vec_get(vec, i);
+  memmove(p+vec->item_size, p, (vec->len-i)*vec->item_size);
+  vec->len++;
+  return p;
+}

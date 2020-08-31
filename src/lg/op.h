@@ -7,13 +7,13 @@
 
 #include "lg/val.h"
 
-enum lg_op_code {LG_ADD=1,
-		 LG_BRINT,
-		 LG_CALL, LG_CP,
-		 LG_DEC,
-		 LG_PUSH,
-		 LG_RET,
-		 LG_STOP, LG_SWAP};
+enum lg_opcode {LG_ADD=1,
+		LG_BRINT,
+		LG_CALL, LG_CP,
+		LG_DEC,
+		LG_PUSH,
+		LG_RET,
+		LG_STOP, LG_SWAP};
 
 enum lg_call_mode {LG_CALL_IMMEDIATE, LG_CALL_RECURSIVE};
 
@@ -32,7 +32,7 @@ struct lg_push_op {
 };
   
 struct lg_op {
-  enum lg_op_code code;
+  enum lg_opcode code;
 
   union {
     struct lg_brint_op as_brint;
@@ -44,7 +44,7 @@ struct lg_op {
 struct lg_vm;
 struct lg_stack;
 
-struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code);
+struct lg_op *lg_op_init(struct lg_op *op, enum lg_opcode code);
 void lg_op_deinit(struct lg_op *op);
 bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y);
 void lg_call(struct lg_vm *vm, struct lg_target *tgt);

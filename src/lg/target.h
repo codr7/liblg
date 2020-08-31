@@ -16,6 +16,6 @@ struct lg_target {
 struct lg_target *lg_target_init(struct lg_target *tgt, const char *id);
 void lg_target_deinit(struct lg_target *tgt);
 
-struct lg_op *lg_emit(struct lg_target *tgt, enum lg_op_code code);
+struct lg_op *lg_emit(struct lg_target *tgt, enum lg_opcode code);
 
 #endif

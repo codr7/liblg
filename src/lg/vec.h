@@ -30,5 +30,6 @@ void *lg_vec_get(struct lg_vec *vec, size_t i);
 void *lg_vec_push(struct lg_vec *vec);
 void *lg_vec_peek(struct lg_vec *vec);
 void *lg_vec_pop(struct lg_vec *vec);
+void *lg_vec_insert(struct lg_vec *vec, size_t i);
 
 #endif

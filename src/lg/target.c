@@ -22,6 +22,6 @@ void lg_target_deinit(struct lg_target *tgt) {
   lg_vec_deinit(&tgt->ops);
 }
 
-struct lg_op *lg_emit(struct lg_target *tgt, enum lg_op_code code) {
+struct lg_op *lg_emit(struct lg_target *tgt, enum lg_opcode code) {
   return lg_op_init(lg_vec_push(&tgt->ops), code);
 }

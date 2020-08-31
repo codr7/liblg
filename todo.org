@@ -1,5 +1,6 @@
 * finish lg_asm()
 ** bench/fibtail.lga
+** finish op parsers
 * handle nested targets
 ** drop from env & deref on exit
 * add tail call optimization
@@ -11,7 +12,4 @@
 * rename test target to fibrec
 ** rename bench/fib.py/go
 * fibtail bench go python
-* convert lg_type to use ref counting
-** add .refs
-** rename deinit to deref
 

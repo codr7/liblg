@@ -9,7 +9,7 @@
 #include "lg/val.h"
 #include "lg/vm.h"
 
-struct lg_op *lg_op_init(struct lg_op *op, enum lg_op_code code) {
+struct lg_op *lg_op_init(struct lg_op *op, enum lg_opcode code) {
   op->code = code;
   return op;
 }
