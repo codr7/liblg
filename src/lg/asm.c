@@ -149,6 +149,7 @@ bool lg_asm(struct lg_vm *vm, struct lg_target *tgt, const char *path) {
     }
 
     pos.row++;
+    lg_buf_clear(&buf);
   }
 
   lg_bset_deinit(&labels);

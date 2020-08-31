@@ -14,7 +14,7 @@ void lg_buf_deinit(struct lg_buf *buf) {
   if (buf->data) { free(buf->data); }
 }
 
-void lg_buf_reset(struct lg_buf *buf) {
+void lg_buf_clear(struct lg_buf *buf) {
   if (buf->data) {
     buf->len = 0;
     buf->data[0] = 0;
