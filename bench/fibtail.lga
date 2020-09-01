@@ -3,7 +3,7 @@ begin fib
   brint 2 1 exit1
   dec 2
   swap
-  add 0 1
+  add
   call fib
   ret
 exit0:

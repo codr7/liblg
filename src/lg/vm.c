@@ -33,7 +33,7 @@ void lg_vm_deinit(struct lg_vm *vm) {
 void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
   static void* dispatch[] = {NULL,
 			     &&add,
-			     &&brint,
+			     &&biq,
 			     &&call, &&cp,
 			     &&dec,
 			     &&push,
@@ -50,11 +50,11 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     lg_val_deinit(&y);
     LG_DISPATCH();
   }
- brint: {
+ biq: {
     vm->pc = lg_vec_get(&vm->target->ops,
-			(op->as_brint.cond == lg_peek(stack)->as_int)
-			? op->as_brint.true_pc
-			: op->as_brint.false_pc);
+			(op->as_biq.cond == lg_peek(stack)->as_int)
+			? op->as_biq.true_pc
+			: op->as_biq.false_pc);
     LG_DISPATCH(); 
   }
  call: {

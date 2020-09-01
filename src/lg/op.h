@@ -8,7 +8,7 @@
 #include "lg/val.h"
 
 enum lg_opcode {LG_ADD=1,
-		LG_BRINT,
+		LG_BIQ,
 		LG_CALL, LG_CP,
 		LG_DEC,
 		LG_PUSH,
@@ -17,7 +17,7 @@ enum lg_opcode {LG_ADD=1,
 
 enum lg_call_mode {LG_CALL_IMMEDIATE, LG_CALL_RECURSIVE};
 
-struct lg_brint_op {
+struct lg_biq_op {
   int64_t cond;
   size_t true_pc, false_pc;
 };
@@ -35,7 +35,7 @@ struct lg_op {
   enum lg_opcode code;
 
   union {
-    struct lg_brint_op as_brint;
+    struct lg_biq_op as_biq;
     struct lg_call_op as_call;
     struct lg_push_op as_push;
   };

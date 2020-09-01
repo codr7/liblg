@@ -38,6 +38,14 @@ static bool parse_add(struct lg_op *op, const char *in) {
   return true;
 }
 
+static bool parse_biq(struct lg_op *op, const char *in) {
+  return true;
+}
+
+static bool parse_call(struct lg_op *op, const char *in) {
+  return true;
+}
+
 static bool parse(struct lg_vm *vm, struct lg_target *tgt, struct lg_bset *labels,
 		  const char *in, struct lg_pos *pos) {
   const char *start = in;
@@ -79,8 +87,8 @@ static bool parse(struct lg_vm *vm, struct lg_target *tgt, struct lg_bset *label
 
   if (checkid("add", start, len) == 0) {
     code = LG_ADD;
-  } else if (checkid("brint", start, len) == 0) {
-    code = LG_BRINT;
+  } else if (checkid("biq", start, len) == 0) {
+    code = LG_BIQ;
   } else if (checkid("call", start, len) == 0) {
     code = LG_CALL;
   } else if (checkid("cp", start, len) == 0) {
@@ -105,6 +113,10 @@ static bool parse(struct lg_vm *vm, struct lg_target *tgt, struct lg_bset *label
   switch (code) {
   case LG_ADD:
     return parse_add(op, skipws(in, pos));
+  case LG_BIQ:
+    return parse_biq(op, skipws(in, pos));
+  case LG_CALL:
+    return parse_call(op, skipws(in, pos));
   default:
     break;
   }
