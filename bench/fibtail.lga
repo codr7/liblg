@@ -1,6 +1,6 @@
 begin fib
-  brint 2 0 exit0
-  brint 2 1 exit1
+  biq 2 0 exit0
+  biq 2 1 exit1
   dec 2
   swap
   add

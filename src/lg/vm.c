@@ -51,10 +51,10 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     LG_DISPATCH();
   }
  biq: {
-    vm->pc = lg_vec_get(&vm->target->ops,
-			(op->as_biq.cond == lg_peek(stack)->as_int)
-			? op->as_biq.true_pc
-			: op->as_biq.false_pc);
+    if (op->as_biq.cond == lg_peek(stack)->as_int) {
+      vm->pc = lg_vec_get(&vm->target->ops, op->as_biq.pc);
+    }
+    
     LG_DISPATCH(); 
   }
  call: {

@@ -19,7 +19,7 @@ enum lg_call_mode {LG_CALL_IMMEDIATE, LG_CALL_RECURSIVE};
 
 struct lg_biq_op {
   int64_t cond;
-  size_t true_pc, false_pc;
+  size_t offs, pc;
 };
   
 struct lg_call_op {

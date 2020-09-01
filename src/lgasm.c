@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     if (strcmp(a, "--debug") == 0) {
       vm.debug = true;
     } else {
-      if (!lg_asm(&vm, &vm.main, a)) {
+      if (!lg_asm(&vm, a)) {
 	break;
       }	      
     }
