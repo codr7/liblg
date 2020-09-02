@@ -4,11 +4,9 @@
 #include <stddef.h>
 
 struct lg_call {
-  struct lg_target *target;
-  struct lg_op *ret_pc;
+  struct lg_op *pc, *ret_pc;
 };
 
-struct lg_call *lg_call_init(struct lg_call *call, struct lg_target *tgt, struct lg_op *ret_pc);
-void lg_call_deinit(struct lg_call *call);
+struct lg_call *lg_call_init(struct lg_call *call, struct lg_op *pc, struct lg_op *ret_pc);
 
 #endif

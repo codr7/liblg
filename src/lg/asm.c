@@ -8,7 +8,6 @@
 #include "lg/error.h"
 #include "lg/op.h"
 #include "lg/pos.h"
-#include "lg/target.h"
 #include "lg/vm.h"
 
 #define LG_LABEL_MAX 32
@@ -185,7 +184,7 @@ static const char * parse_swap(struct lg_op *op, const char *in) {
   return in;
 }
 
-static bool parse_labels(struct lg_vm *vm, struct lg_target *tgt, struct lg_bset *labels, const char *in) {
+static bool parse_labels(struct lg_vm *vm, struct lg_bset *labels, const char *in) {
   while (*in) {      
     const char *start = in;
   
@@ -207,7 +206,7 @@ static bool parse_labels(struct lg_vm *vm, struct lg_target *tgt, struct lg_bset
       }
       
       strcpy(l->id, id);
-      l->pc = tgt->ops.len;
+      l->pc = vm->ops.len;
     }
     
     while (*in) {
@@ -224,7 +223,6 @@ static bool parse_labels(struct lg_vm *vm, struct lg_target *tgt, struct lg_bset
 }
   
 static const char *parse_op(struct lg_vm *vm, 
-			    struct lg_target *tgt,
 			    struct lg_bset *labels,
 			    const char *in,
 			    struct lg_pos *pos) {
@@ -254,8 +252,6 @@ static const char *parse_op(struct lg_vm *vm,
   
   enum lg_opcode code;
 
-  printf("opcode: %c\n", *start);
-
   if (checkid("add", start, len)) {
     code = LG_ADD;
   } else if (checkid("biq", start, len)) {
@@ -279,8 +275,7 @@ static const char *parse_op(struct lg_vm *vm,
     return NULL;
   }
 
-  struct lg_op *op = lg_emit(tgt, code);
-  printf("op: %d %c %c\n", code, *start, *skipws(end, pos));
+  struct lg_op *op = lg_emit(vm, code);
 
   switch (code) {
   case LG_ADD:
@@ -333,13 +328,13 @@ bool lg_asm(struct lg_vm *vm, const char *path) {
   lg_pos_init(&pos, 1, 0);
   while (*lg_getline(&buf, f));
 
-  if (!parse_labels(vm, &vm->main, &labels, buf.data)) {
+  if (!parse_labels(vm, &labels, buf.data)) {
     return false;
   }
   
   const char *in = buf.data;
   
-  while ((in = parse_op(vm, &vm->main, &labels, in, &pos))) {
+  while ((in = parse_op(vm, &labels, in, &pos))) {
     pos.row++;
   }
 

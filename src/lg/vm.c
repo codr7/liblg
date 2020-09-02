@@ -8,8 +8,7 @@
 #include "lg/vm.h"
 
 struct lg_vm *lg_vm_init(struct lg_vm *vm) {
-  lg_target_init(&vm->main, "main");
-  vm->target = &vm->main;
+  lg_vec_init(&vm->ops, sizeof(struct lg_op));
   lg_vec_init(&vm->calls, sizeof(struct lg_call));
   vm->pc = NULL;
   vm->debug = false;
@@ -17,13 +16,16 @@ struct lg_vm *lg_vm_init(struct lg_vm *vm) {
 }
 
 void lg_vm_deinit(struct lg_vm *vm) {
-  lg_target_deinit(&vm->main);
-
-  LG_VEC_DO(&vm->calls, struct lg_call *, c) {
-    lg_call_deinit(c);
+  LG_VEC_DO(&vm->ops, struct lg_op *, op) {
+    lg_op_deinit(op);
   }
-
+  
+  lg_vec_deinit(&vm->ops);
   lg_vec_deinit(&vm->calls);
+}
+
+struct lg_op *lg_emit(struct lg_vm *vm, enum lg_opcode code) {
+  return lg_op_init(lg_vec_push(&vm->ops), code);
 }
 
 #define LG_DISPATCH()				\
@@ -41,7 +43,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
 			     &&stop, &&swap};
   
   struct lg_op *op = NULL;
-  vm->pc = lg_vec_get(&vm->target->ops, start_pc);
+  vm->pc = lg_vec_get(&vm->ops, start_pc);
   LG_DISPATCH();
   
  add: {
@@ -52,26 +54,27 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
   }
  biq: {
     if (op->as_biq.cond == lg_peek(stack)->as_int) {
-      vm->pc = lg_vec_get(&vm->target->ops, op->as_biq.pc);
+      vm->pc = lg_vec_get(&vm->ops, op->as_biq.pc);
     }
     
     LG_DISPATCH(); 
   }
  call: {
-    struct lg_target *tgt = NULL;
+    struct lg_op *pc = NULL;
     
     switch (op->as_call.mode) {
     case LG_CALL_IMMEDIATE: {
-      tgt = op->as_call.target;
+      pc = lg_vec_get(&vm->ops, op->as_call.pc);
       break;
     }
-    default: {
-      tgt = vm->target;
+    case LG_CALL_RECURSIVE: {
+      struct lg_call *c = lg_vec_peek(&vm->calls);
+      pc = c->pc;
       break;
     }
     }
 
-    lg_call(vm, tgt);
+    lg_call(vm, pc);
     LG_DISPATCH();
   }
  cp: {
@@ -93,15 +96,6 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
  ret: {
     struct lg_call *c = lg_vec_pop(&vm->calls);
     vm->pc = c->ret_pc;
-    lg_call_deinit(c);
-    
-    if (vm->calls.len) {
-      struct lg_call *c = lg_vec_peek(&vm->calls);
-      vm->target = c->target;
-    } else {
-      vm->target = &vm->main;
-    }
-    
     LG_DISPATCH();
   }
  stop: {}

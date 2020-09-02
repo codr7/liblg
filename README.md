@@ -12,7 +12,7 @@ $ cd build
 $ cmake ..
 $ make fibrec
 $ ./fibrec
-193128us
+148810us
 ```
 
 ### design
@@ -26,7 +26,7 @@ Fundamental types are global (as in not tied to a specific VM instance), new typ
 [liblg](https://github.com/codr7/liblg) comes equipped with a custom [assembler](https://github.com/codr7/liblg/tree/master/bench/fibtail.lga) syntax that provides a transparent interface to it's functionality.
 
 ### benchmarks
-The VM is currently around 40% faster than Python3 and 14 times as slow as Go, ideas on how to make it run significantly faster without making a mess are most welcome.
+The VM is currently around 60% faster than Python3 and 10 times as slow as Go, ideas on how to make it run significantly faster without making a mess are most welcome.
 
 ```
 $ cd bench

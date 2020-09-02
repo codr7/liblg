@@ -3,7 +3,6 @@
 #include "lg/call.h"
 #include "lg/error.h"
 #include "lg/op.h"
-#include "lg/target.h"
 #include "lg/stack.h"
 #include "lg/type.h"
 #include "lg/val.h"
@@ -41,10 +40,9 @@ bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
   return true;
 }
 
-void lg_call(struct lg_vm *vm, struct lg_target *tgt) {
-  lg_call_init(lg_vec_push(&vm->calls), tgt, vm->pc);
-  vm->target = tgt;
-  vm->pc = lg_vec_get(&tgt->ops, 0);
+void lg_call(struct lg_vm *vm, struct lg_op *pc) {
+  lg_call_init(lg_vec_push(&vm->calls), pc, vm->pc);
+  vm->pc = pc;
 }
 
 struct lg_val *lg_clone(struct lg_vm *vm, struct lg_stack *stack, struct lg_val src) {  
