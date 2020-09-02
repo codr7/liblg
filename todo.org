@@ -1,9 +1,6 @@
 * finish lg_asm()
-** bench/fibtail.lga
-** finish begin parser
-*** track targets in separate bset
-** finish op parsers
-*** dec drop call push
+** finish op parsers in fibtail.lga
+*** dec drop call jmp push
 * add tail call optimization
 ** add bool lg_tco(struct lg_target *tgt, struct lg_op* op)
 *** add bool lg_op.tco(struct lg_op *op)

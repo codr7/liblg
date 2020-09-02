@@ -156,31 +156,35 @@ static const char* parse_biq(struct lg_vm *vm,
      (in = parse_label(vm, skipws(in, pos), &op->as_biq.pc, labels, pos))) ? in : NULL;
 }
 
-static const char * parse_call(struct lg_op *op, const char *in) {
+static const char *parse_call(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char * parse_cp(struct lg_op *op, const char *in) {
+static const char *parse_cp(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char * parse_dec(struct lg_op *op, const char *in) {
+static const char *parse_dec(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char * parse_push(struct lg_op *op, const char *in) {
+static const char *parse_jmp(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char * parse_ret(struct lg_op *op, const char *in) {
+static const char *parse_push(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char * parse_stop(struct lg_op *op, const char *in) {
+static const char *parse_ret(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char * parse_swap(struct lg_op *op, const char *in) {
+static const char *parse_stop(struct lg_op *op, const char *in) {
+  return in;
+}
+
+static const char *parse_swap(struct lg_op *op, const char *in) {
   return in;
 }
 
@@ -262,6 +266,8 @@ static const char *parse_op(struct lg_vm *vm,
     code = LG_CP;
   } else if (checkid("dec", start, len)) {
     code = LG_DEC;
+  } else if (checkid("jmp", start, len)) {
+    code = LG_JMP;
   } else if (checkid("push", start, len)) {
     code = LG_PUSH;
   } else if (checkid("ret", start, len)) {
@@ -276,26 +282,29 @@ static const char *parse_op(struct lg_vm *vm,
   }
 
   struct lg_op *op = lg_emit(vm, code);
-
+  in = skipws(in, pos);
+  
   switch (code) {
   case LG_ADD:
-    return parse_add(op, skipws(in, pos));
+    return parse_add(op, in);
   case LG_BIQ:
-    return parse_biq(vm, op, skipws(in, pos), labels, pos);
+    return parse_biq(vm, op, in, labels, pos);
   case LG_CALL:
-    return parse_call(op, skipws(in, pos));
+    return parse_call(op, in);
   case LG_CP:
-    return parse_cp(op, skipws(in, pos));
+    return parse_cp(op, in);
   case LG_DEC:
-    return parse_dec(op, skipws(in, pos));
+    return parse_dec(op, in);
+  case LG_JMP:
+    return parse_jmp(op, in);
   case LG_PUSH:
-    return parse_push(op, skipws(in, pos));
+    return parse_push(op, in);
   case LG_RET:
-    return parse_ret(op, skipws(in, pos));
+    return parse_ret(op, in);
   case LG_STOP:
-    return parse_stop(op, skipws(in, pos));
+    return parse_stop(op, in);
   case LG_SWAP:
-    return parse_swap(op, skipws(in, pos));
+    return parse_swap(op, in);
   }
 
   return in;

@@ -1,4 +1,6 @@
-begin fib
+jmp start
+
+fib:
   biq 2 0 exit0
   biq 2 1 exit1
   dec 2
@@ -15,7 +17,7 @@ exit1:
   swap
   drop
   ret
-end
 
-push 20 0 1
-call fib
+start:
+  push 20 0 1
+  call fib

@@ -38,6 +38,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
 			     &&biq,
 			     &&call, &&cp,
 			     &&dec,
+			     &&jmp,
 			     &&push,
 			     &&ret,
 			     &&stop, &&swap};
@@ -85,8 +86,8 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     lg_peek(stack)->as_int--;
     LG_DISPATCH();
   }
- swap: {
-    lg_swap(stack);
+ jmp: {
+    vm->pc = lg_vec_get(&vm->ops, op->as_jmp.pc);
     LG_DISPATCH();
   }
  push: {
@@ -98,5 +99,10 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     vm->pc = c->ret_pc;
     LG_DISPATCH();
   }
+ swap: {
+    lg_swap(stack);
+    LG_DISPATCH();
+  }
+
  stop: {}
 }
