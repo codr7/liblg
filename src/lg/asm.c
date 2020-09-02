@@ -18,16 +18,23 @@ struct label {
 };
 
 static const char *skipws(const char *in, struct lg_pos *pos) {
-  for (;;) {
+  while (*in) {
     switch (*in) {
     case ' ':
       in++;
       pos->col++;
       break;
+    case '\n':
+      in++;
+      pos->row++;
+      pos->col = 0;
+      break;
     default:
       return in;
     }
   }
+
+  return in;
 }
 
 static bool checkid(const char *id, const char *in, size_t len) {
@@ -92,7 +99,6 @@ static const char *parse_int(const char *in,
 static const char *parse_size(const char *in,
 			      size_t *val,
 			      struct lg_pos *pos) {
-  printf("parse_size: %c\n", *(in-1));
   const char *start = in; 
   *val = 0;
 
@@ -111,7 +117,6 @@ static const char *parse_label(struct lg_vm *vm,
 			       size_t *val,
 			       struct lg_bset *labels,
 			       struct lg_pos *pos) {
-  printf("parse_label: %c\n", *in);
   const char *start = in;
   
   while (!isspace(*in)) {
@@ -127,7 +132,7 @@ static const char *parse_label(struct lg_vm *vm,
   }
 
   char id[LG_LABEL_MAX] = {0};
-  strncpy(id, start, len-1);
+  strncpy(id, start, len);
   struct label *l = lg_bset_get(labels, id);
 
   if (!l) {
@@ -148,16 +153,19 @@ static const char* parse_biq(struct lg_vm *vm,
 			     const char *in,
 			     struct lg_bset *labels,
 			     struct lg_pos *pos) {  
-  printf("parse_biq: %c\n", *in);
-
   return
     ((in = parse_size(in, &op->as_biq.offs, pos)) &&
      (in = parse_int(skipws(in, pos), &op->as_biq.cond, pos)) &&
      (in = parse_label(vm, skipws(in, pos), &op->as_biq.pc, labels, pos))) ? in : NULL;
 }
 
-static const char *parse_call(struct lg_op *op, const char *in) {
-  return in;
+static const char *parse_call(struct lg_vm *vm,
+			      struct lg_op *op,
+			      const char *in,
+			      struct lg_bset *labels,
+			      struct lg_pos *pos) {
+  op->as_call.mode = LG_CALL_IMMEDIATE;
+  return parse_label(vm, skipws(in, pos), &op->as_call.pc, labels, pos);
 }
 
 static const char *parse_cp(struct lg_op *op, const char *in) {
@@ -168,8 +176,12 @@ static const char *parse_dec(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char *parse_jmp(struct lg_op *op, const char *in) {
-  return in;
+static const char *parse_jmp(struct lg_vm *vm,
+			     struct lg_op *op,
+			     const char *in,
+			     struct lg_bset *labels,
+			     struct lg_pos *pos) {
+  return parse_label(vm, skipws(in, pos), &op->as_jmp.pc, labels, pos);
 }
 
 static const char *parse_push(struct lg_op *op, const char *in) {
@@ -248,12 +260,6 @@ static const char *parse_op(struct lg_vm *vm,
     return in;
   }
 
-  if (checkid("begin", start, len)) {
-    return in;
-  } else if (checkid("end", start, len)) {
-    return in;
-  }
-  
   enum lg_opcode code;
 
   if (checkid("add", start, len)) {
@@ -290,13 +296,13 @@ static const char *parse_op(struct lg_vm *vm,
   case LG_BIQ:
     return parse_biq(vm, op, in, labels, pos);
   case LG_CALL:
-    return parse_call(op, in);
+    return parse_call(vm, op, in, labels, pos);
   case LG_CP:
     return parse_cp(op, in);
   case LG_DEC:
     return parse_dec(op, in);
   case LG_JMP:
-    return parse_jmp(op, in);
+    return parse_jmp(vm, op, in, labels, pos);
   case LG_PUSH:
     return parse_push(op, in);
   case LG_RET:
@@ -342,11 +348,7 @@ bool lg_asm(struct lg_vm *vm, const char *path) {
   }
   
   const char *in = buf.data;
-  
-  while ((in = parse_op(vm, &labels, in, &pos))) {
-    pos.row++;
-  }
-
+  while (*in && (in = parse_op(vm, &labels, in, &pos)));
   lg_bset_deinit(&labels);
   lg_buf_deinit(&buf);
   fclose(f);
