@@ -4,26 +4,26 @@
 #include "lg/bset.h"
 #include "lg/util.h"
 
-struct lg_bset *lg_bset_init(struct lg_bset *set, size_t item_size, lg_cmp_t cmp, lg_bset_key_t key) {
-  set->cmp = cmp;
-  set->key = key;
-  lg_vec_init(&set->items, item_size);
-  return set;
+struct lg_bset *lg_bset_init(struct lg_bset *_, size_t item_size, lg_cmp_t cmp, lg_bset_key_t key) {
+  _->cmp = cmp;
+  _->key = key;
+  lg_vec_init(&_->items, item_size);
+  return _;
 }
 
-void lg_bset_deinit(struct lg_bset *set) {
-  lg_vec_deinit(&set->items);
+void lg_bset_deinit(struct lg_bset *_) {
+  lg_vec_deinit(&_->items);
 }
 
-size_t lg_bset_find(struct lg_bset *set, void *key, bool *ok) {
-  size_t min = 0, max = set->items.len;
+size_t lg_bset_find(struct lg_bset *_, void *key, bool *ok) {
+  size_t min = 0, max = _->items.len;
 
   while (min < max) {
     const size_t i = (min+max)/2;
-    const void *v = lg_vec_get(&set->items, i);
-    const void *k = set->key ? set->key(v) : v;
+    const void *v = lg_vec_get(&_->items, i);
+    const void *k = _->key ? _->key(v) : v;
 
-    switch (set->cmp(key, k)) {
+    switch (_->cmp(key, k)) {
     case LG_LT:
       max = i;
       break;
@@ -42,14 +42,14 @@ size_t lg_bset_find(struct lg_bset *set, void *key, bool *ok) {
   return min;
 }
 
-void *lg_bset_get(struct lg_bset *set, void *key) {
+void *lg_bset_get(struct lg_bset *_, void *key) {
   bool ok = false;
-  const size_t i = lg_bset_find(set, key, &ok);
-  return ok ? lg_vec_get(&set->items, i) : NULL;
+  const size_t i = lg_bset_find(_, key, &ok);
+  return ok ? lg_vec_get(&_->items, i) : NULL;
 }
 
-void *lg_bset_add(struct lg_bset *set, void *key) {
+void *lg_bset_add(struct lg_bset *_, void *key) {
   bool ok = false;
-  const size_t i = lg_bset_find(set, key, &ok);
-  return ok ? NULL : lg_vec_insert(&set->items, i);
+  const size_t i = lg_bset_find(_, key, &ok);
+  return ok ? NULL : lg_vec_insert(&_->items, i);
 }

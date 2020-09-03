@@ -16,7 +16,7 @@ struct lg_type {
   void (*sub_imp)(struct lg_vm *vm, struct lg_val *x, struct lg_val y);
 };
 
-struct lg_type *lg_type_init(struct lg_type *type, const char *id);
-void lg_type_deinit(struct lg_type *type);
+struct lg_type *lg_type_init(struct lg_type *_, const char *id);
+void lg_type_deinit(struct lg_type *_);
 
 #endif

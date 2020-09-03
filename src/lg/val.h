@@ -14,7 +14,7 @@ struct lg_val {
   };
 };
 
-struct lg_val *lg_val_init(struct lg_val *val, struct lg_type *type);
-void lg_val_deinit(struct lg_val *val);
+struct lg_val *lg_val_init(struct lg_val *_, struct lg_type *type);
+void lg_val_deinit(struct lg_val *_);
 		   
 #endif

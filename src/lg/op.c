@@ -8,34 +8,34 @@
 #include "lg/val.h"
 #include "lg/vm.h"
 
-struct lg_op *lg_op_init(struct lg_op *op, enum lg_opcode code) {
-  op->code = code;
+struct lg_op *lg_op_init(struct lg_op *_, enum lg_opcode code) {
+  _->code = code;
 
-  switch (op->code) {
+  switch (_->code) {
   case LG_BIQ:
-    op->as_biq.offs = 0;
-    op->as_biq.pc = -1;
+    _->as_biq.offs = 0;
+    _->as_biq.pc = -1;
     break;
   case LG_CALL:
-    op->as_call.pc = -1;
+    _->as_call.pc = -1;
     break;
   case LG_DEC:
-    op->as_dec.offs = 0;
+    _->as_dec.offs = 0;
     break;
   case LG_JMP:
-    op->as_jmp.pc = -1;
+    _->as_jmp.pc = -1;
     break;
   default:
     break;
   }
 
-  return op;
+  return _;
 }
 
-void lg_op_deinit(struct lg_op *op) {
-  switch (op->code) {
+void lg_op_deinit(struct lg_op *_) {
+  switch (_->code) {
   case LG_PUSH:
-    lg_val_deinit(&op->as_push.val);
+    lg_val_deinit(&_->as_push.val);
     break;
   default:
     break;

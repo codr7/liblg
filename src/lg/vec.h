@@ -22,14 +22,14 @@ struct lg_vec {
   uint8_t *items, *start, *end;
 };
 
-struct lg_vec *lg_vec_init(struct lg_vec *vec, size_t size);
-void lg_vec_deinit(struct lg_vec *vec);
-void lg_vec_grow(struct lg_vec *vec, size_t cap);
-void lg_vec_clear(struct lg_vec *vec);
-void *lg_vec_get(struct lg_vec *vec, size_t i);
-void *lg_vec_push(struct lg_vec *vec);
-void *lg_vec_peek(struct lg_vec *vec);
-void *lg_vec_pop(struct lg_vec *vec);
-void *lg_vec_insert(struct lg_vec *vec, size_t i);
+struct lg_vec *lg_vec_init(struct lg_vec *_, size_t size);
+void lg_vec_deinit(struct lg_vec *_);
+void lg_vec_grow(struct lg_vec *_, size_t cap);
+void lg_vec_clear(struct lg_vec *_);
+void *lg_vec_get(struct lg_vec *_, size_t i);
+void *lg_vec_push(struct lg_vec *_);
+void *lg_vec_peek(struct lg_vec *_);
+void *lg_vec_pop(struct lg_vec *_);
+void *lg_vec_insert(struct lg_vec *_, size_t i);
 
 #endif

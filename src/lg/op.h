@@ -54,8 +54,9 @@ struct lg_op {
 struct lg_vm;
 struct lg_stack;
 
-struct lg_op *lg_op_init(struct lg_op *op, enum lg_opcode code);
-void lg_op_deinit(struct lg_op *op);
+struct lg_op *lg_op_init(struct lg_op *_, enum lg_opcode code);
+void lg_op_deinit(struct lg_op *_);
+
 bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y);
 void lg_call(struct lg_vm *vm, struct lg_op *pc);
 struct lg_val *lg_clone(struct lg_vm *vm, struct lg_stack *stack, struct lg_val src);
