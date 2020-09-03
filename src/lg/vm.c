@@ -37,7 +37,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
 			     &&add,
 			     &&biq,
 			     &&call, &&cp,
-			     &&dec,
+			     &&dec, &&drop,
 			     &&jmp,
 			     &&push,
 			     &&rec, &&ret,
@@ -54,7 +54,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     LG_DISPATCH();
   }
  biq: {
-    if (op->as_biq.cond == (lg_peek(stack) - op->as_biq.offs)->as_int) {
+    if (op->as_biq.cond == (lg_peek(stack) - op->as_biq.i)->as_int) {
       vm->pc = lg_vec_get(&vm->ops, op->as_biq.pc);
     }
     
@@ -69,7 +69,11 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     LG_DISPATCH();
   }
  dec: {
-    (lg_peek(stack) - op->as_dec.offs)->as_int--;
+    (lg_peek(stack) - op->as_dec.i)->as_int--;
+    LG_DISPATCH();
+  }
+ drop: {
+    lg_drop(stack, op->as_drop.i, op->as_drop.n);
     LG_DISPATCH();
   }
  jmp: {

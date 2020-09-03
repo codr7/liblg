@@ -1,6 +1,7 @@
 push 20 0 1
 call fib
-  
+stop
+
 fib:
   biq 2 0 exit0
   biq 2 1 exit1

@@ -68,3 +68,19 @@ void *lg_vec_insert(struct lg_vec *_, size_t i) {
   _->len++;
   return p;
 }
+
+bool lg_vec_delete(struct lg_vec *_, size_t i, size_t n) {
+  if (_->len < i+n) {
+    return false;
+  }
+
+  if (i+n < _->len) {
+    uint8_t *const p = lg_vec_get(_, i);
+    size_t s = _->item_size*n;
+    memmove(p, p + s, s);
+  }
+
+  _->len -= n;
+  return true;
+}
+

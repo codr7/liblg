@@ -154,7 +154,7 @@ static const char* parse_biq(struct lg_vm *vm,
 			     struct lg_bset *labels,
 			     struct lg_pos *pos) {  
   return
-    ((in = parse_size(in, &op->as_biq.offs, pos)) &&
+    ((in = parse_size(in, &op->as_biq.i, pos)) &&
      (in = parse_int(skipws(in, pos), &op->as_biq.cond, pos)) &&
      (in = parse_label(vm, skipws(in, pos), &op->as_biq.pc, labels, pos))) ? in : NULL;
 }
@@ -172,7 +172,13 @@ static const char *parse_cp(struct lg_op *op, const char *in) {
 }
 
 static const char *parse_dec(struct lg_op *op, const char *in, struct lg_pos *pos) {
-  return parse_size(in, &op->as_dec.offs, pos);
+  return parse_size(in, &op->as_dec.i, pos);
+}
+
+static const char *parse_drop(struct lg_op *op, const char *in, struct lg_pos *pos) {
+  return
+    (in = parse_size(in, &op->as_drop.i, pos)) &&
+    (in = parse_size(in, &op->as_drop.n, pos)) ? in : NULL;
 }
 
 static const char *parse_jmp(struct lg_vm *vm,
@@ -275,6 +281,8 @@ static const char *parse_op(struct lg_vm *vm,
     code = LG_CP;
   } else if (checkid("dec", start, len)) {
     code = LG_DEC;
+  } else if (checkid("drop", start, len)) {
+    code = LG_DROP;
   } else if (checkid("jmp", start, len)) {
     code = LG_JMP;
   } else if (checkid("push", start, len)) {
@@ -306,6 +314,8 @@ static const char *parse_op(struct lg_vm *vm,
     return parse_cp(op, in);
   case LG_DEC:
     return parse_dec(op, in, pos);
+  case LG_DROP:
+    return parse_drop(op, in, pos);
   case LG_JMP:
     return parse_jmp(vm, op, in, labels, pos);
   case LG_PUSH:

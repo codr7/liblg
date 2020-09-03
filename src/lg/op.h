@@ -10,7 +10,7 @@
 enum lg_opcode {LG_ADD=1,
 		LG_BIQ,
 		LG_CALL, LG_CP,
-		LG_DEC,
+		LG_DEC, LG_DROP,
 		LG_JMP,
 		LG_PUSH,
 		LG_REC, LG_RET,
@@ -18,7 +18,7 @@ enum lg_opcode {LG_ADD=1,
 
 struct lg_biq_op {
   int64_t cond;
-  size_t offs, pc;
+  size_t i, pc;
 };
 
 struct lg_call_op {
@@ -26,7 +26,11 @@ struct lg_call_op {
 };
 
 struct lg_dec_op {
-  size_t offs;
+  size_t i;
+};
+
+struct lg_drop_op {
+  size_t i, n;
 };
 
 struct lg_jmp_op {
@@ -44,6 +48,7 @@ struct lg_op {
     struct lg_biq_op as_biq;
     struct lg_call_op as_call;
     struct lg_dec_op as_dec;
+    struct lg_drop_op as_drop;
     struct lg_jmp_op as_jmp;
     struct lg_push_op as_push;
   };

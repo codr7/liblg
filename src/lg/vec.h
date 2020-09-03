@@ -1,6 +1,7 @@
 #ifndef LG_VEC_H
 #define LG_VEC_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -31,5 +32,6 @@ void *lg_vec_push(struct lg_vec *_);
 void *lg_vec_peek(struct lg_vec *_);
 void *lg_vec_pop(struct lg_vec *_);
 void *lg_vec_insert(struct lg_vec *_, size_t i);
+bool lg_vec_delete(struct lg_vec *_, size_t i, size_t n);
 
 #endif
