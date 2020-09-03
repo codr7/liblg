@@ -13,10 +13,8 @@ enum lg_opcode {LG_ADD=1,
 		LG_DEC,
 		LG_JMP,
 		LG_PUSH,
-		LG_RCALL,
-		LG_RET,
-		LG_STOP, LG_SWAP,
-		LG_TCALL};
+		LG_REC, LG_RET,
+		LG_STOP, LG_SWAP};
 
 struct lg_biq_op {
   int64_t cond;

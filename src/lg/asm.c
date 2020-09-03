@@ -187,7 +187,7 @@ static const char *parse_push(struct lg_op *op, const char *in) {
   return in;
 }
 
-static const char *parse_rcall(struct lg_op *op, const char *in) {
+static const char *parse_rec(struct lg_op *op, const char *in) {
   return in;
 }
 
@@ -200,10 +200,6 @@ static const char *parse_stop(struct lg_op *op, const char *in) {
 }
 
 static const char *parse_swap(struct lg_op *op, const char *in) {
-  return in;
-}
-
-static const char *parse_tcall(struct lg_op *op, const char *in) {
   return in;
 }
 
@@ -283,16 +279,14 @@ static const char *parse_op(struct lg_vm *vm,
     code = LG_JMP;
   } else if (checkid("push", start, len)) {
     code = LG_PUSH;
-  } else if (checkid("rcall", start, len)) {
-    code = LG_RCALL;
+  } else if (checkid("rec", start, len)) {
+    code = LG_REC;
   } else if (checkid("ret", start, len)) {
     code = LG_RET;
   } else if (checkid("stop", start, len)) {
     code = LG_STOP;
   } else if (checkid("swap", start, len)) {
     code = LG_SWAP;
-  } else if (checkid("tcall", start, len)) {
-    code = LG_TCALL;
   } else {
     lg_error(vm, "Invalid opcode");
     return NULL;
@@ -316,16 +310,14 @@ static const char *parse_op(struct lg_vm *vm,
     return parse_jmp(vm, op, in, labels, pos);
   case LG_PUSH:
     return parse_push(op, in);
-  case LG_RCALL:
-    return parse_rcall(op, in);
+  case LG_REC:
+    return parse_rec(op, in);
   case LG_RET:
     return parse_ret(op, in);
   case LG_STOP:
     return parse_stop(op, in);
   case LG_SWAP:
     return parse_swap(op, in);
-  case LG_TCALL:
-    return parse_tcall(op, in);
   }
 
   return in;
