@@ -20,10 +20,10 @@ static void fib(struct lg_vm *vm, struct lg_stack *stack) {
 
   lg_emit(vm, LG_DEC);
   lg_emit(vm, LG_CP);
-  lg_emit(vm, LG_CALL)->as_call.mode = LG_CALL_RECURSIVE;
+  lg_emit(vm, LG_RCALL);
   lg_emit(vm, LG_SWAP);
   lg_emit(vm, LG_DEC);
-  lg_emit(vm, LG_CALL)->as_call.mode = LG_CALL_RECURSIVE;
+  lg_emit(vm, LG_RCALL);
   lg_emit(vm, LG_ADD);
 
   struct lg_op *op = lg_vec_get(&vm->ops, zero_pc);
@@ -34,11 +34,7 @@ static void fib(struct lg_vm *vm, struct lg_stack *stack) {
   
   size_t start_pc = vm->ops.len;
   lg_val_init(&lg_emit(vm, LG_PUSH)->as_push.val, &lg_int_type)->as_int = 20;
-
-  op = lg_emit(vm, LG_CALL);
-  op->as_call.mode = LG_CALL_IMMEDIATE;
-  op->as_call.pc = fib_pc;
-
+  lg_emit(vm, LG_CALL)->as_call.pc = fib_pc;
   lg_emit(vm, LG_STOP);
   
   struct lg_timer t;

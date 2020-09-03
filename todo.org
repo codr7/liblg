@@ -1,6 +1,6 @@
 * finish lg_asm()
 ** finish op parsers in fibtail.lga
-*** dec drop push
+*** drop push
 * add tail call optimization
 ** add bool lg_tco(struct lg_target *tgt, struct lg_op* op)
 *** add bool lg_op.tco(struct lg_op *op)

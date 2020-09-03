@@ -6,7 +6,7 @@ fib:
   dec 2
   swap
   add
-  call fib
+  tcall
   ret
 exit0:
   swap

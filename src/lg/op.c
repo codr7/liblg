@@ -10,6 +10,25 @@
 
 struct lg_op *lg_op_init(struct lg_op *op, enum lg_opcode code) {
   op->code = code;
+
+  switch (op->code) {
+  case LG_BIQ:
+    op->as_biq.offs = 0;
+    op->as_biq.pc = -1;
+    break;
+  case LG_CALL:
+    op->as_call.pc = -1;
+    break;
+  case LG_DEC:
+    op->as_dec.offs = 0;
+    break;
+  case LG_JMP:
+    op->as_jmp.pc = -1;
+    break;
+  default:
+    break;
+  }
+
   return op;
 }
 

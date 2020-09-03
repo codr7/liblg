@@ -40,8 +40,10 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
 			     &&dec,
 			     &&jmp,
 			     &&push,
+			     &&rcall,
 			     &&ret,
-			     &&stop, &&swap};
+			     &&stop, &&swap,
+			     &&tcall};
   
   struct lg_op *op = NULL;
   vm->pc = lg_vec_get(&vm->ops, start_pc);
@@ -61,21 +63,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     LG_DISPATCH(); 
   }
  call: {
-    struct lg_op *pc = NULL;
-    
-    switch (op->as_call.mode) {
-    case LG_CALL_IMMEDIATE: {
-      pc = lg_vec_get(&vm->ops, op->as_call.pc);
-      break;
-    }
-    case LG_CALL_RECURSIVE: {
-      struct lg_call *c = lg_vec_peek(&vm->calls);
-      pc = c->pc;
-      break;
-    }
-    }
-
-    lg_call(vm, pc);
+    lg_call(vm, lg_vec_get(&vm->ops, op->as_call.pc));
     LG_DISPATCH();
   }
  cp: {
@@ -83,7 +71,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     LG_DISPATCH();
   }
  dec: {
-    lg_peek(stack)->as_int--;
+    (lg_peek(stack) - op->as_dec.offs)->as_int--;
     LG_DISPATCH();
   }
  jmp: {
@@ -94,6 +82,11 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     lg_clone(vm, stack, op->as_push.val);
     LG_DISPATCH();
   }
+ rcall: {
+    struct lg_call *c = lg_vec_peek(&vm->calls);
+    lg_call(vm, c->pc);
+    LG_DISPATCH();
+  }
  ret: {
     struct lg_call *c = lg_vec_pop(&vm->calls);
     vm->pc = c->ret_pc;
@@ -101,6 +94,11 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
   }
  swap: {
     lg_swap(stack);
+    LG_DISPATCH();
+  }
+ tcall: {
+    struct lg_call *c = lg_vec_peek(&vm->calls);
+    vm->pc = c->pc;
     LG_DISPATCH();
   }
 
