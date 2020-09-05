@@ -45,7 +45,7 @@ static void fib(struct lg_vm *vm, struct lg_stack *stack) {
     assert(lg_pop(stack)->as_int == 6765);
   }
   
-  printf("%luus\n", lg_timer_usecs(&t));
+  printf("%" PRIu64 "us\n", lg_timer_usecs(&t));
 }
 
 int main() {

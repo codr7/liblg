@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     lg_exec(&vm, &stack, 0);
   }
 
-  printf("%luus\n", lg_timer_usecs(&t));
+  printf("%" PRIu64 "us\n", lg_timer_usecs(&t));
 
   if (vm.debug) {
     lg_stack_deinit(&stack);
