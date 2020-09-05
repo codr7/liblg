@@ -25,6 +25,10 @@ struct lg_call_op {
   size_t pc;
 };
 
+struct lg_cp_op {
+  size_t i;
+};
+
 struct lg_dec_op {
   size_t i;
 };
@@ -47,6 +51,7 @@ struct lg_op {
   union {
     struct lg_biq_op as_biq;
     struct lg_call_op as_call;
+    struct lg_cp_op as_cp;
     struct lg_dec_op as_dec;
     struct lg_drop_op as_drop;
     struct lg_jmp_op as_jmp;

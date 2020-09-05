@@ -26,7 +26,7 @@ void lg_vec_grow(struct lg_vec *_, size_t cap) {
 
 void lg_vec_clear(struct lg_vec *_) {
   _->len = 0;
-  _->end = LG_ALIGN(_->items, _->item_size);
+  _->end = _->start;
 }
 
 void *lg_vec_get(struct lg_vec *_, size_t i) {
@@ -66,6 +66,7 @@ void *lg_vec_insert(struct lg_vec *_, size_t i) {
   uint8_t *const p = lg_vec_get(_, i);
   memmove(p+_->item_size, p, (_->len-i)*_->item_size);
   _->len++;
+  _->end += _->item_size;
   return p;
 }
 
@@ -81,6 +82,7 @@ bool lg_vec_delete(struct lg_vec *_, size_t i, size_t n) {
   }
 
   _->len -= n;
+  _->end -= n*_->item_size;
   return true;
 }
 

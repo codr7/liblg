@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdio.h>
 
 #include "lg/call.h"
 #include "lg/error.h"
@@ -19,8 +20,15 @@ struct lg_op *lg_op_init(struct lg_op *_, enum lg_opcode code) {
   case LG_CALL:
     _->as_call.pc = -1;
     break;
+  case LG_CP:
+    _->as_cp.i = 0;
+    break;
   case LG_DEC:
     _->as_dec.i = 0;
+    break;
+  case LG_DROP:
+    _->as_drop.i = 0;
+    _->as_drop.n = 1;
     break;
   case LG_JMP:
     _->as_jmp.pc = -1;

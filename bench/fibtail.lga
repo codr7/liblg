@@ -1,5 +1,8 @@
-push 20 0 1
+push 20
+push 0
+push 1
 call fib
+drop 0 1
 stop
 
 fib:
@@ -7,9 +10,9 @@ fib:
   biq 2 1 exit1
   dec 2
   swap
+  cp 1
   add
-  tcall
-  ret
+  rec
 exit0:
   swap
   drop 2 2

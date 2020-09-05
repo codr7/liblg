@@ -1,11 +1,14 @@
+#include <stdio.h>
 #include <string.h>
 
 #include "lg/asm.h"
 #include "lg/init.h"
 #include "lg/stack.h"
+#include "lg/timer.h"
 #include "lg/vm.h"
 
 int main(int argc, char *argv[]) {
+  lg_init();
   struct lg_vm vm;
   lg_vm_init(&vm);
   vm.debug = true;
@@ -26,7 +29,15 @@ int main(int argc, char *argv[]) {
   }
 
   lg_emit(&vm, LG_STOP);
-  lg_exec(&vm, &stack, 0);
+
+  struct lg_timer t;
+  lg_timer_init(&t);
+  
+  for (int i = 0; i < 4; i++) {
+    lg_exec(&vm, &stack, 0);
+  }
+
+  printf("%luus\n", lg_timer_usecs(&t));
 
   if (vm.debug) {
     lg_stack_deinit(&stack);

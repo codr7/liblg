@@ -8,6 +8,7 @@
 #include "lg/error.h"
 #include "lg/op.h"
 #include "lg/pos.h"
+#include "lg/types/int.h"
 #include "lg/vm.h"
 
 #define LG_LABEL_MAX 32
@@ -104,8 +105,7 @@ static const char *parse_size(const char *in,
 
   while (isdigit(*in)) {
     *val *= 10;
-    *val += *in - '0';
-    in++;
+    *val += *in++ - '0';
     pos->col++;
   }
 
@@ -167,8 +167,8 @@ static const char *parse_call(struct lg_vm *vm,
   return parse_label(vm, skipws(in, pos), &op->as_call.pc, labels, pos);
 }
 
-static const char *parse_cp(struct lg_op *op, const char *in) {
-  return in;
+static const char *parse_cp(struct lg_op *op, const char *in, struct lg_pos *pos) {
+  return parse_size(in, &op->as_cp.i, pos);
 }
 
 static const char *parse_dec(struct lg_op *op, const char *in, struct lg_pos *pos) {
@@ -178,7 +178,7 @@ static const char *parse_dec(struct lg_op *op, const char *in, struct lg_pos *po
 static const char *parse_drop(struct lg_op *op, const char *in, struct lg_pos *pos) {
   return
     (in = parse_size(in, &op->as_drop.i, pos)) &&
-    (in = parse_size(in, &op->as_drop.n, pos)) ? in : NULL;
+    (in = parse_size(skipws(in, pos), &op->as_drop.n, pos)) ? in : NULL;
 }
 
 static const char *parse_jmp(struct lg_vm *vm,
@@ -189,20 +189,9 @@ static const char *parse_jmp(struct lg_vm *vm,
   return parse_label(vm, skipws(in, pos), &op->as_jmp.pc, labels, pos);
 }
 
-static const char *parse_push(struct lg_op *op, const char *in) {
-  return in;
-}
-
-static const char *parse_rec(struct lg_op *op, const char *in) {
-  return in;
-}
-
-static const char *parse_ret(struct lg_op *op, const char *in) {
-  return in;
-}
-
-static const char *parse_stop(struct lg_op *op, const char *in) {
-  return in;
+static const char *parse_push(struct lg_op *op, const char *in, struct lg_pos *pos) {
+  lg_val_init(&op->as_push.val, &lg_int_type);
+  return parse_int(in, &op->as_push.val.as_int, pos);
 }
 
 static const char *parse_swap(struct lg_op *op, const char *in) {
@@ -210,30 +199,40 @@ static const char *parse_swap(struct lg_op *op, const char *in) {
 }
 
 static bool parse_labels(struct lg_vm *vm, struct lg_bset *labels, const char *in) {
-  while (*in) {      
+  size_t pc = 0;
+  
+  while (*in) {
+    while (isspace(*in)) {
+      in++;
+    }
+    
     const char *start = in;
   
-    while (!isspace(*in)) {
+    while (*in && !isspace(*in)) {
       in++;
     }
     
     const char *end = in;
     size_t len = end - start;
     
-    if (end > start && *(end-1) == ':') {
-      char id[LG_LABEL_MAX] = {0};
-      strncpy(id, start, len-1);
-      struct label *l = lg_bset_add(labels, id);
-      
-      if (!l) {
-	lg_error(vm, "Duplicate label: %s", id);
-	return false;
+    if (end > start) {
+      if (*(end-1) == ':') {
+	char id[LG_LABEL_MAX] = {0};
+	strncpy(id, start, len-1);
+	struct label *l = lg_bset_add(labels, id);
+	
+	if (!l) {
+	  lg_error(vm, "Duplicate label: %s", id);
+	  return false;
+	}
+	
+	strcpy(l->id, id);
+	l->pc = pc;
+      } else {
+	pc++;
       }
-      
-      strcpy(l->id, id);
-      l->pc = vm->ops.len;
     }
-    
+
     while (*in) {
       char c = *in;
       in++;
@@ -311,7 +310,7 @@ static const char *parse_op(struct lg_vm *vm,
   case LG_CALL:
     return parse_call(vm, op, in, labels, pos);
   case LG_CP:
-    return parse_cp(op, in);
+    return parse_cp(op, in, pos);
   case LG_DEC:
     return parse_dec(op, in, pos);
   case LG_DROP:
@@ -319,15 +318,13 @@ static const char *parse_op(struct lg_vm *vm,
   case LG_JMP:
     return parse_jmp(vm, op, in, labels, pos);
   case LG_PUSH:
-    return parse_push(op, in);
-  case LG_REC:
-    return parse_rec(op, in);
-  case LG_RET:
-    return parse_ret(op, in);
-  case LG_STOP:
-    return parse_stop(op, in);
+    return parse_push(op, in, pos);
   case LG_SWAP:
     return parse_swap(op, in);
+  case LG_REC:
+  case LG_RET:
+  case LG_STOP:
+    break;
   }
 
   return in;

@@ -65,7 +65,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     LG_DISPATCH();
   }
  cp: {
-    lg_cp(vm, stack, *lg_peek(stack));
+    lg_cp(vm, stack, *(lg_peek(stack) - op->as_cp.i));
     LG_DISPATCH();
   }
  dec: {
