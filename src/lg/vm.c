@@ -33,15 +33,15 @@ struct lg_op *lg_emit(struct lg_vm *vm, enum lg_opcode code) {
   goto *dispatch[op->code]
 
 void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
-  static void* dispatch[] = {NULL,
-			     &&add,
-			     &&biq,
-			     &&call, &&cp,
-			     &&dec, &&drop,
-			     &&jmp,
-			     &&push,
-			     &&ret,
-			     &&stop, &&swap};
+  static const void* dispatch[] = {NULL,
+				   &&add,
+				   &&biq,
+				   &&call, &&cp,
+				   &&dec, &&drop,
+				   &&jmp,
+				   &&push,
+				   &&ret,
+				   &&stop, &&swap};
   
   struct lg_op *op = NULL;
   vm->pc = lg_vec_get(&vm->ops, start_pc);

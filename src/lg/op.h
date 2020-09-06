@@ -7,14 +7,18 @@
 
 #include "lg/val.h"
 
-enum lg_opcode {LG_ADD=1,
+#define LG_OP_COUNT (LG_OP_MAX-1)
+
+enum lg_opcode {LG_NOP = 0,
+		LG_ADD,
 		LG_BIQ,
 		LG_CALL, LG_CP,
 		LG_DEC, LG_DROP,
 		LG_JMP,
 		LG_PUSH,
 		LG_RET,
-		LG_STOP, LG_SWAP};
+		LG_STOP, LG_SWAP,
+                LG_OP_MAX};
 
 struct lg_biq_op {
   int64_t cond;

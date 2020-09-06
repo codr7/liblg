@@ -1,4 +1,6 @@
 * improve parser
 ** add newline scan to end of parse_op
-** use table for op parsers
 ** add pos arg to lg_error
+* add void *as_any to lg_val
+* add fibiter bench
+* compare C++
