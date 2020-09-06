@@ -26,13 +26,13 @@ Fundamental types are global (as in not tied to a specific VM instance), new typ
 [liblg](https://github.com/codr7/liblg) comes equipped with a simple custom [assembler](https://github.com/codr7/liblg/tree/master/bench/fibtail.lga) that provides a transparent interface to it's functionality.
 
 #### add
-Pop and adds the top of the stack to the previous item.
+Pop and add the top of the stack to the previous item.
 
 #### biq $offset $condition $label
 Branch to $label if the stack value att $offset is equal to $condition.
 
 #### call $label
-Push the current program counter on the call stack and jumps to $label.
+Push the program counter on the call stack and jump to $label.
 
 #### cp $offset
 Push a copy of the value at stack $offset.
@@ -50,10 +50,10 @@ Jump to $label.
 Push $value on the stack.
 
 #### ret
-Return from current call.
+Return from the current call.
 
 #### swap
-Swap top two items on stack.
+Swap the top two items on the stack.
 
 ### benchmarks
 The VM is currently significantly faster than Python3 and around 10 times as slow as Go, ideas on how to improve its performance further without making a mess are most welcome.
