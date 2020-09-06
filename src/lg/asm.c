@@ -30,6 +30,9 @@ static const char *skipws(const char *in, struct lg_pos *pos) {
       pos->row++;
       pos->col = 0;
       break;
+    case '\r':
+      in++;
+      break;
     default:
       return in;
     }
@@ -311,10 +314,10 @@ static const char *parse_op(struct lg_vm *vm,
     lg_error(vm, "Invalid opcode");
     return NULL;
   }
-
+  
   struct lg_op *op = lg_emit(vm, code);
   in = skipws(in, pos);
-
+  
   static const lg_parser_t parsers[LG_OP_MAX] =
     {NULL, NULL,
      parse_biq,
@@ -361,6 +364,7 @@ bool lg_asm(struct lg_vm *vm, const char *path) {
   
   const char *in = buf.data;
   while (*in && (in = parse_op(vm, &labels, in, &pos)));
+  
   lg_bset_deinit(&labels);
   lg_buf_deinit(&buf);
   fclose(f);

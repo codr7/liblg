@@ -15,10 +15,6 @@ fib:
   jmp fib
 exit0:
   swap
-  drop 2 2
-  ret
 exit1:
   drop 2 2
-  swap
-  drop
   ret

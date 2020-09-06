@@ -2,5 +2,7 @@
 ** add newline scan to end of parse_op
 ** add pos arg to lg_error
 * add void *as_any to lg_val
+* add BILT op
+** use BILT instead if BIQs in fibrec.c
 * add fibiter bench
 * compare C++
