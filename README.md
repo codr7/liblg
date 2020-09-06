@@ -75,6 +75,9 @@ Push $value on the stack.
 #### ret
 Return from the current call.
 
+#### stop
+Stop execution.
+
 #### swap
 Swap the top two items on the stack.
 
