@@ -20,10 +20,9 @@ The VM is currently significantly faster than Python3 and around 10 times as slo
 
 
 ```
-$ cd bench
-$ python3 fibrec.py
+$ python3 bench/fibrec.py
 353813us
-$ go run fibrec.go
+$ go run bench/fibrec.go
 14170us
 ```
 
@@ -33,10 +32,9 @@ $ make lgasm
 $ cd ..
 $ build/lgasm --bench 100 bench/fibtail.lga
 147us
-$ cd ../bench
-$ python3 fibtail.py
+$ python3 bench/fibtail.py
 543us
-$ go run fibtail.go
+$ go run bench/fibtail.go
 9us
 ```
 

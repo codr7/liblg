@@ -1,4 +1,3 @@
-* rename drop to pop
 * improve parser
 ** add newline scan to end of parse_op
 ** use table for op parsers
