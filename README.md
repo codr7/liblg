@@ -15,6 +15,31 @@ $ ./fibrec
 148810us
 ```
 
+### benchmarks
+The VM is currently significantly faster than Python3 and around 10 times as slow as Go, ideas on how to improve its performance further without making a mess are most welcome.
+
+
+```
+$ cd bench
+$ python3 fibrec.py
+353813us
+$ go run fibrec.go
+14170us
+```
+
+```
+$ cd build
+$ make lgasm
+$ cd ..
+$ build/lgasm --bench 100 bench/fibtail.lga
+147us
+$ cd ../bench
+$ python3 fibtail.py
+543us
+$ go run fibtail.go
+9us
+```
+
 ### design
 The core loop uses computed goto, which means that new instructions must be added in identical order [here](https://github.com/codr7/liblg/blob/master/src/lg/op.h) and [here](https://github.com/codr7/liblg/blob/master/src/lg/vm.c).
 
@@ -54,31 +79,6 @@ Return from the current call.
 
 #### swap
 Swap the top two items on the stack.
-
-### benchmarks
-The VM is currently significantly faster than Python3 and around 10 times as slow as Go, ideas on how to improve its performance further without making a mess are most welcome.
-
-
-```
-$ cd bench
-$ python3 fibrec.py
-353813us
-$ go run fibrec.go
-14170us
-```
-
-```
-$ cd build
-$ make lgasm
-$ cd ..
-$ build/lgasm --bench 100 bench/fibtail.lga
-147us
-$ cd ../bench
-$ python3 fibtail.py
-543us
-$ go run fibtail.go
-9us
-```
 
 ### license
 [MIT](https://github.com/codr7/liblg/blob/master/LICENSE.txt)
