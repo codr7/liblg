@@ -286,8 +286,6 @@ static const char *parse_op(struct lg_vm *vm,
     code = LG_JMP;
   } else if (checkid("push", start, len)) {
     code = LG_PUSH;
-  } else if (checkid("rec", start, len)) {
-    code = LG_REC;
   } else if (checkid("ret", start, len)) {
     code = LG_RET;
   } else if (checkid("stop", start, len)) {
@@ -321,7 +319,6 @@ static const char *parse_op(struct lg_vm *vm,
     return parse_push(op, in, pos);
   case LG_SWAP:
     return parse_swap(op, in);
-  case LG_REC:
   case LG_RET:
   case LG_STOP:
     break;

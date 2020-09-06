@@ -40,7 +40,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
 			     &&dec, &&drop,
 			     &&jmp,
 			     &&push,
-			     &&rec, &&ret,
+			     &&ret,
 			     &&stop, &&swap};
   
   struct lg_op *op = NULL;
@@ -82,11 +82,6 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
   }
  push: {
     lg_clone(vm, stack, op->as_push.val);
-    LG_DISPATCH();
-  }
- rec: {
-    struct lg_call *c = lg_vec_peek(&vm->calls);
-    vm->pc = c->pc;
     LG_DISPATCH();
   }
  ret: {

@@ -12,7 +12,7 @@ fib:
   swap
   cp 1
   add
-  rec
+  jmp fib
 exit0:
   swap
   drop 2 2

@@ -1,4 +1,11 @@
-* fibtail bench go python
-* add -bench arg to lgasm
-** default 1
-** use to limit loop & control print
+* add tco
+** add bool lg_tco(op *start, op *end)
+** switch call to rec if directly followed by rec
+** add --no-tco flag to lgasm
+*** switch vm->debug to vm->flags
+**** add enum lg_flags LG_DEBUG / LG_TCO
+* improve parser
+** add newline scan to end of parse_op
+** use table for op parsers
+** add pos arg to lg_error
+* document asm instructions

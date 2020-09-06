@@ -23,10 +23,41 @@ Fundamental types are global (as in not tied to a specific VM instance), new typ
 [Values](https://github.com/codr7/liblg/blob/master/src/lg/val.h) are represented as tagged unions.
 
 ### assembler
-[liblg](https://github.com/codr7/liblg) comes equipped with a custom [assembler](https://github.com/codr7/liblg/tree/master/bench/fibtail.lga) syntax that provides a transparent interface to it's functionality.
+[liblg](https://github.com/codr7/liblg) comes equipped with a simple custom [assembler](https://github.com/codr7/liblg/tree/master/bench/fibtail.lga) that provides a transparent interface to it's functionality.
+
+#### add
+Pop and adds the top of the stack to the previous item.
+
+#### biq $offset $condition $label
+Branch to $label if the stack value att $offset is equal to $condition.
+
+#### call $label
+Push the current program counter on the call stack and jumps to $label.
+
+#### cp $offset
+Push a copy of the value at stack $offset.
+
+#### dec $offset
+Decrease the value att stack $offset by one.
+
+#### drop $offset $count
+Drop $count items from stack $offset.
+
+#### jmp $label
+Jump to $label.
+
+#### push $value
+Push $value on the stack.
+
+#### ret
+Return from current call.
+
+#### swap
+Swap top two items on stack.
 
 ### benchmarks
-The VM is currently around 60% faster than Python3 and 10 times as slow as Go, ideas on how to make it run significantly faster without making a mess are most welcome.
+The VM is currently significantly faster than Python3 and around 10 times as slow as Go, ideas on how to improve its performance further without making a mess are most welcome.
+
 
 ```
 $ cd bench
@@ -34,6 +65,19 @@ $ python3 fibrec.py
 353813us
 $ go run fibrec.go
 14170us
+```
+
+```
+$ cd build
+$ make lgasm
+$ cd ..
+$ build/lgasm --bench 100 bench/fibtail.lga
+147us
+$ cd ../bench
+$ python3 fibtail.py
+543us
+$ go run fibtail.go
+9us
 ```
 
 ### license
