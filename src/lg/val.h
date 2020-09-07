@@ -11,6 +11,7 @@ struct lg_val {
   
   union {
     int64_t as_int;
+    void *as_ptr;
   };
 };
 

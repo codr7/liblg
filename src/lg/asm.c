@@ -147,15 +147,26 @@ static const char *parse_label(struct lg_vm *vm,
   return in;
 }
 
-static const char* parse_biq(struct lg_vm *vm,
+static const char* parse_beq(struct lg_vm *vm,
 			     struct lg_op *op,
 			     const char *in,
 			     struct lg_bset *labels,
 			     struct lg_pos *pos) {  
   return
-    ((in = parse_size(in, &op->as_biq.i, pos)) &&
-     (in = parse_int(skipws(in, pos), &op->as_biq.cond, pos)) &&
-     (in = parse_label(vm, skipws(in, pos), &op->as_biq.pc, labels, pos))) ? in : NULL;
+    ((in = parse_size(in, &op->as_beq.i, pos)) &&
+     (in = parse_int(skipws(in, pos), &op->as_beq.cond, pos)) &&
+     (in = parse_label(vm, skipws(in, pos), &op->as_beq.pc, labels, pos))) ? in : NULL;
+}
+
+static const char* parse_blt(struct lg_vm *vm,
+			     struct lg_op *op,
+			     const char *in,
+			     struct lg_bset *labels,
+			     struct lg_pos *pos) {  
+  return
+    ((in = parse_size(in, &op->as_blt.i, pos)) &&
+     (in = parse_int(skipws(in, pos), &op->as_blt.cond, pos)) &&
+     (in = parse_label(vm, skipws(in, pos), &op->as_blt.pc, labels, pos))) ? in : NULL;
 }
 
 static const char *parse_call(struct lg_vm *vm,
@@ -270,7 +281,7 @@ static const char *parse_op(struct lg_vm *vm,
 			    struct lg_pos *pos) {
   const char *start = in = skipws(in, pos);
   
-  while (!isspace(*in)) {
+  while (*in && !isspace(*in)) {
     in++;
     pos->col++;
   }
@@ -290,8 +301,10 @@ static const char *parse_op(struct lg_vm *vm,
 
   if (checkid("add", start, len)) {
     code = LG_ADD;
-  } else if (checkid("biq", start, len)) {
-    code = LG_BIQ;
+  } else if (checkid("beq", start, len)) {
+    code = LG_BEQ;
+  } else if (checkid("blt", start, len)) {
+    code = LG_BLT;
   } else if (checkid("call", start, len)) {
     code = LG_CALL;
   } else if (checkid("cp", start, len)) {
@@ -320,7 +333,7 @@ static const char *parse_op(struct lg_vm *vm,
   
   static const lg_parser_t parsers[LG_OP_MAX] =
     {NULL, NULL,
-     parse_biq,
+     parse_beq, parse_blt,
      parse_call, parse_cp,
      parse_dec, parse_drop,
      parse_jmp,

@@ -11,13 +11,7 @@
 
 static void fib(struct lg_vm *vm, struct lg_stack *stack) {  
   size_t fib_pc = vm->ops.len;
-
-  size_t zero_pc = vm->ops.len;
-  lg_emit(vm, LG_BIQ)->as_biq.cond = 0;
-  
-  size_t one_pc = vm->ops.len;
-  lg_emit(vm, LG_BIQ)->as_biq.cond = 1;
-
+  lg_emit(vm, LG_BLT)->as_blt.cond = 2;
   lg_emit(vm, LG_DEC);
   lg_emit(vm, LG_CP);
   lg_emit(vm, LG_CALL)->as_call.pc = fib_pc;
@@ -26,10 +20,8 @@ static void fib(struct lg_vm *vm, struct lg_stack *stack) {
   lg_emit(vm, LG_CALL)->as_call.pc = fib_pc;
   lg_emit(vm, LG_ADD);
 
-  struct lg_op *op = lg_vec_get(&vm->ops, zero_pc);
-  op->as_biq.pc = vm->ops.len;  
-  op = lg_vec_get(&vm->ops, one_pc);
-  op->as_biq.pc = vm->ops.len;
+  struct lg_op *op = lg_vec_get(&vm->ops, fib_pc);
+  op->as_blt.pc = vm->ops.len;  
   lg_emit(vm, LG_RET);
   
   size_t start_pc = vm->ops.len;

@@ -13,9 +13,13 @@ struct lg_op *lg_op_init(struct lg_op *_, enum lg_opcode code) {
   _->code = code;
 
   switch (_->code) {
-  case LG_BIQ:
-    _->as_biq.i = 0;
-    _->as_biq.pc = -1;
+  case LG_BEQ:
+    _->as_beq.i = 0;
+    _->as_beq.pc = -1;
+    break;
+  case LG_BLT:
+    _->as_blt.i = 0;
+    _->as_blt.pc = -1;
     break;
   case LG_CALL:
     _->as_call.pc = -1;

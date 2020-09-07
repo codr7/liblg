@@ -51,8 +51,11 @@ Fundamental types are global (as in not tied to a specific VM instance), new typ
 #### add
 Pop and add the top of the stack to the previous item.
 
-#### biq $offset $condition $label
-Branch to $label if the stack value att $offset is equal to $condition.
+#### beq $offset $value $label
+Branch to $label if the stack value att $offset is equal to $value.
+
+#### blt $offset $value $label
+Branch to $label if the stack value att $offset is less than $value.
 
 #### call $label
 Push the program counter on the call stack and jump to $label.

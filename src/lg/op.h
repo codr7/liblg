@@ -7,11 +7,9 @@
 
 #include "lg/val.h"
 
-#define LG_OP_COUNT (LG_OP_MAX-1)
-
 enum lg_opcode {LG_NOP = 0,
 		LG_ADD,
-		LG_BIQ,
+		LG_BEQ, LG_BLT,
 		LG_CALL, LG_CP,
 		LG_DEC, LG_DROP,
 		LG_JMP,
@@ -20,7 +18,12 @@ enum lg_opcode {LG_NOP = 0,
 		LG_STOP, LG_SWAP,
                 LG_OP_MAX};
 
-struct lg_biq_op {
+struct lg_beq_op {
+  int64_t cond;
+  size_t i, pc;
+};
+
+struct lg_blt_op {
   int64_t cond;
   size_t i, pc;
 };
@@ -53,7 +56,8 @@ struct lg_op {
   enum lg_opcode code;
 
   union {
-    struct lg_biq_op as_biq;
+    struct lg_beq_op as_beq;
+    struct lg_blt_op as_blt;
     struct lg_call_op as_call;
     struct lg_cp_op as_cp;
     struct lg_dec_op as_dec;
