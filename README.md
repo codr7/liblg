@@ -60,7 +60,10 @@ Pop and add the top of the stack to the previous item.
 #### beq $offset $value $label
 Branch to $label if the stack value att $offset is equal to $value.
 
-#### blt $offset $value $label
+#### bgr $offset $value $label
+Branch to $label if the stack value att $offset is greater than $value.
+
+#### ble $offset $value $label
 Branch to $label if the stack value att $offset is less than $value.
 
 #### call $label
