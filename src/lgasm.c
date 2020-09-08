@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
   struct lg_stack stack;
   lg_stack_init(&stack);
 
-  uintmax_t reps = 1;
+  uintmax_t bench = 0;
   
   while (--argc && ++argv) {
     const char *a = *argv;
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     if (strcmp(a, "--debug") == 0) {
       vm.debug = true;
     } else if (strcmp(a, "--bench") == 0) {
-      reps = strtoumax(*(++argv), NULL, 10);
+      bench = strtoumax(*(++argv), NULL, 10);
       argc--;
     } else {
       if (!lg_asm(&vm, a)) {
@@ -34,15 +34,16 @@ int main(int argc, char *argv[]) {
   }
 
   lg_emit(&vm, LG_STOP);
+  lg_exec(&vm, &stack, 0);
 
-  struct lg_timer t;
-  lg_timer_init(&t);
-  
-  for (int i = 0; i < reps; i++) {
-    lg_exec(&vm, &stack, 0);
-  }
+  if (bench) {
+    struct lg_timer t;
+    lg_timer_init(&t);
+    
+    for (int i = 0; i < bench; i++) {
+      lg_exec(&vm, &stack, 0);
+    }
 
-  if (reps > 1) {
     printf("%" PRIu64 "us\n", lg_timer_usecs(&t));
   }
   

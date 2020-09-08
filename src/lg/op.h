@@ -9,7 +9,7 @@
 
 enum lg_opcode {LG_NOP = 0,
 		LG_ADD,
-		LG_BEQ, LG_BLT,
+		LG_BEQ, LG_BGR, LG_BLE,
 		LG_CALL, LG_CP,
 		LG_DEC, LG_DROP,
 		LG_JMP,
@@ -23,7 +23,12 @@ struct lg_beq_op {
   size_t i, pc;
 };
 
-struct lg_blt_op {
+struct lg_bgr_op {
+  int64_t cond;
+  size_t i, pc;
+};
+
+struct lg_ble_op {
   int64_t cond;
   size_t i, pc;
 };
@@ -57,7 +62,8 @@ struct lg_op {
 
   union {
     struct lg_beq_op as_beq;
-    struct lg_blt_op as_blt;
+    struct lg_bgr_op as_bgr;
+    struct lg_ble_op as_ble;
     struct lg_call_op as_call;
     struct lg_cp_op as_cp;
     struct lg_dec_op as_dec;

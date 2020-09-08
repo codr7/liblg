@@ -158,15 +158,26 @@ static const char* parse_beq(struct lg_vm *vm,
      (in = parse_label(vm, skipws(in, pos), &op->as_beq.pc, labels, pos))) ? in : NULL;
 }
 
-static const char* parse_blt(struct lg_vm *vm,
+static const char* parse_bgr(struct lg_vm *vm,
 			     struct lg_op *op,
 			     const char *in,
 			     struct lg_bset *labels,
 			     struct lg_pos *pos) {  
   return
-    ((in = parse_size(in, &op->as_blt.i, pos)) &&
-     (in = parse_int(skipws(in, pos), &op->as_blt.cond, pos)) &&
-     (in = parse_label(vm, skipws(in, pos), &op->as_blt.pc, labels, pos))) ? in : NULL;
+    ((in = parse_size(in, &op->as_bgr.i, pos)) &&
+     (in = parse_int(skipws(in, pos), &op->as_bgr.cond, pos)) &&
+     (in = parse_label(vm, skipws(in, pos), &op->as_bgr.pc, labels, pos))) ? in : NULL;
+}
+
+static const char* parse_ble(struct lg_vm *vm,
+			     struct lg_op *op,
+			     const char *in,
+			     struct lg_bset *labels,
+			     struct lg_pos *pos) {  
+  return
+    ((in = parse_size(in, &op->as_ble.i, pos)) &&
+     (in = parse_int(skipws(in, pos), &op->as_ble.cond, pos)) &&
+     (in = parse_label(vm, skipws(in, pos), &op->as_ble.pc, labels, pos))) ? in : NULL;
 }
 
 static const char *parse_call(struct lg_vm *vm,
@@ -303,8 +314,10 @@ static const char *parse_op(struct lg_vm *vm,
     code = LG_ADD;
   } else if (checkid("beq", start, len)) {
     code = LG_BEQ;
-  } else if (checkid("blt", start, len)) {
-    code = LG_BLT;
+  } else if (checkid("bgr", start, len)) {
+    code = LG_BGR;
+  } else if (checkid("ble", start, len)) {
+    code = LG_BLE;
   } else if (checkid("call", start, len)) {
     code = LG_CALL;
   } else if (checkid("cp", start, len)) {
@@ -333,7 +346,7 @@ static const char *parse_op(struct lg_vm *vm,
   
   static const lg_parser_t parsers[LG_OP_MAX] =
     {NULL, NULL,
-     parse_beq, parse_blt,
+     parse_beq, parse_bgr, parse_ble,
      parse_call, parse_cp,
      parse_dec, parse_drop,
      parse_jmp,

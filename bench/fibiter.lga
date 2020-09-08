@@ -1,0 +1,19 @@
+push 20
+call fib
+drop 0 1
+stop
+
+fib:
+  push 0
+  push 1
+  
+  loop:
+    swap
+    cp 1
+    add
+    dec 2
+    bgr 2 0 loop
+
+  swap
+  drop 2 2
+  ret

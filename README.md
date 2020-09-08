@@ -1,5 +1,5 @@
 ### intro
-The goal of [liblg](https://github.com/codr7/liblg) is to create a reasonably fast, minimal stack-based VM in C. It currently implements just enough functionality to do recursive Fibonacci. The general idea is that it's potentially useful to have access to stack vm functionality in library form, for implementing custom DSLs on top etc.
+The goal of [liblg](https://github.com/codr7/liblg) is to create a reasonably fast, minimal stack-based VM in C. It currently implements just enough functionality to generate the Fibonacci sequence using recursion, tail-recursion and iteration. The general idea is that it's potentially useful to have access to stack vm functionality in library form, for implementing custom DSLs on top etc.
 
 ### setup
 [liblg](https://github.com/codr7/liblg) requires a C compiler and CMake to build.
@@ -10,13 +10,13 @@ $ cd liblg
 $ mkdir build
 $ cd build
 $ cmake ..
-$ make fibrec
+$ make
 $ ./fibrec
 148810us
 ```
 
 ### benchmarks
-The VM is currently significantly faster than Python3 and around 10 times as slow as Go, ideas on how to improve its performance further without making a mess are most welcome.
+The VM is currently significantly faster than Python3 and an order of magnitude slower than Go, ideas on how to improve the performance further without making a mess are most welcome.
 
 
 ```
@@ -27,15 +27,21 @@ $ go run bench/fibrec.go
 ```
 
 ```
-$ cd build
-$ make lgasm
-$ cd ..
 $ build/lgasm --bench 100 bench/fibtail.lga
 147us
 $ python3 bench/fibtail.py
 543us
 $ go run bench/fibtail.go
 9us
+```
+
+```
+$ build/lgasm --bench 100 bench/fibiter.lga
+126us
+$ python3 bench/fibiter.py
+173us
+$ go run bench/fibiter.go
+4us
 ```
 
 ### design

@@ -35,7 +35,7 @@ struct lg_op *lg_emit(struct lg_vm *vm, enum lg_opcode code) {
 void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
   static const void* dispatch[] = {NULL,
 				   &&add,
-				   &&beq, &&blt,
+				   &&beq, &&bgr, &&ble,
 				   &&call, &&cp,
 				   &&dec, &&drop,
 				   &&jmp,
@@ -60,9 +60,16 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
     
     LG_DISPATCH(); 
   }
-  blt: {
-    if ((lg_peek(stack) - op->as_blt.i)->as_int < op->as_blt.cond) {
-      vm->pc = lg_vec_get(&vm->ops, op->as_blt.pc);
+  bgr: {
+    if ((lg_peek(stack) - op->as_bgr.i)->as_int > op->as_bgr.cond) {
+      vm->pc = lg_vec_get(&vm->ops, op->as_bgr.pc);
+    }
+    
+    LG_DISPATCH(); 
+  }
+  ble: {
+    if ((lg_peek(stack) - op->as_ble.i)->as_int < op->as_ble.cond) {
+      vm->pc = lg_vec_get(&vm->ops, op->as_ble.pc);
     }
     
     LG_DISPATCH(); 
