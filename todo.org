@@ -1,6 +1,3 @@
 * improve parser
 ** add newline scan to end of parse_op
-** add pos arg to lg_error
-* add dst/src args to add op
-** replace swap stack reorg in fibrec/tail?
 * compare C++

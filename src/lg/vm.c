@@ -24,8 +24,8 @@ void lg_vm_deinit(struct lg_vm *vm) {
   lg_vec_deinit(&vm->calls);
 }
 
-struct lg_op *lg_emit(struct lg_vm *vm, enum lg_opcode code) {
-  return lg_op_init(lg_vec_push(&vm->ops), code);
+struct lg_op *lg_emit(struct lg_vm *vm, struct lg_pos pos, enum lg_opcode code) {
+  return lg_op_init(lg_vec_push(&vm->ops), pos, code);
 }
 
 #define LG_DISPATCH()				\
@@ -49,7 +49,7 @@ void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc) {
   
  add: {
     struct lg_val y = *lg_pop(stack);
-    lg_add(vm, lg_peek(stack), y);
+    lg_add(vm, op->pos, lg_peek(stack), y);
     lg_val_deinit(&y);
     LG_DISPATCH();
   }

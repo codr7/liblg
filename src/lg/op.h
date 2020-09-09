@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "lg/pos.h"
 #include "lg/val.h"
 
 enum lg_opcode {LG_NOP = 0,
@@ -58,8 +59,9 @@ struct lg_push_op {
 };
 
 struct lg_op {
+  struct lg_pos pos;
   enum lg_opcode code;
-
+  
   union {
     struct lg_beq_op as_beq;
     struct lg_bgr_op as_bgr;
@@ -76,10 +78,10 @@ struct lg_op {
 struct lg_vm;
 struct lg_stack;
 
-struct lg_op *lg_op_init(struct lg_op *_, enum lg_opcode code);
+struct lg_op *lg_op_init(struct lg_op *_, struct lg_pos pos, enum lg_opcode code);
 void lg_op_deinit(struct lg_op *_);
 
-bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y);
+bool lg_add(struct lg_vm *vm, struct lg_pos pos, struct lg_val *x, struct lg_val y);
 void lg_call(struct lg_vm *vm, struct lg_op *pc);
 struct lg_val *lg_clone(struct lg_vm *vm, struct lg_stack *stack, struct lg_val src);
 struct lg_val *lg_cp(struct lg_vm *vm, struct lg_stack *stack, struct lg_val src);

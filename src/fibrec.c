@@ -10,24 +10,27 @@
 #include "lg/vm.h"
 
 static void fib(struct lg_vm *vm, struct lg_stack *stack) {  
+  struct lg_pos pos;
+  lg_pos_init(&pos, -1, -1);
+
   size_t fib_pc = vm->ops.len;
-  lg_emit(vm, LG_BLE)->as_ble.cond = 2;
-  lg_emit(vm, LG_DEC);
-  lg_emit(vm, LG_CP);
-  lg_emit(vm, LG_CALL)->as_call.pc = fib_pc;
-  lg_emit(vm, LG_SWAP);
-  lg_emit(vm, LG_DEC);
-  lg_emit(vm, LG_CALL)->as_call.pc = fib_pc;
-  lg_emit(vm, LG_ADD);
+  lg_emit(vm, pos, LG_BLE)->as_ble.cond = 2;
+  lg_emit(vm, pos, LG_DEC);
+  lg_emit(vm, pos, LG_CP);
+  lg_emit(vm, pos, LG_CALL)->as_call.pc = fib_pc;
+  lg_emit(vm, pos, LG_SWAP);
+  lg_emit(vm, pos, LG_DEC);
+  lg_emit(vm, pos, LG_CALL)->as_call.pc = fib_pc;
+  lg_emit(vm, pos, LG_ADD);
 
   struct lg_op *op = lg_vec_get(&vm->ops, fib_pc);
   op->as_ble.pc = vm->ops.len;  
-  lg_emit(vm, LG_RET);
+  lg_emit(vm, pos, LG_RET);
   
   size_t start_pc = vm->ops.len;
-  lg_val_init(&lg_emit(vm, LG_PUSH)->as_push.val, &lg_int_type)->as_int = 20;
-  lg_emit(vm, LG_CALL)->as_call.pc = fib_pc;
-  lg_emit(vm, LG_STOP);
+  lg_val_init(&lg_emit(vm, pos, LG_PUSH)->as_push.val, &lg_int_type)->as_int = 20;
+  lg_emit(vm, pos, LG_CALL)->as_call.pc = fib_pc;
+  lg_emit(vm, pos, LG_STOP);
   
   struct lg_timer t;
   lg_timer_init(&t);

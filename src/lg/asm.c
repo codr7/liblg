@@ -139,7 +139,7 @@ static const char *parse_label(struct lg_vm *vm,
   struct label *l = lg_bset_get(labels, id);
 
   if (!l) {
-    lg_error(vm, "Unknown label: %s", id);
+    lg_error(vm, *pos, "Unknown label: %s", id);
     return NULL;
   }
 
@@ -231,18 +231,15 @@ static const char* parse_push(struct lg_vm *vm,
   return parse_int(in, &op->as_push.val.as_int, pos);
 }
 
-static bool parse_labels(struct lg_vm *vm, struct lg_bset *labels, const char *in) {
+static bool parse_labels(struct lg_vm *vm, struct lg_pos *pos, struct lg_bset *labels, const char *in) {
   size_t pc = 0;
   
   while (*in) {
-    while (isspace(*in)) {
-      in++;
-    }
-    
-    const char *start = in;
+    const char *start = in = skipws(in, pos);
   
     while (*in && !isspace(*in)) {
       in++;
+      pos->col++;
     }
     
     const char *end = in;
@@ -255,7 +252,7 @@ static bool parse_labels(struct lg_vm *vm, struct lg_bset *labels, const char *i
 	struct label *l = lg_bset_add(labels, id);
 	
 	if (!l) {
-	  lg_error(vm, "Duplicate label: %s", id);
+	  lg_error(vm, *pos, "Duplicate label: %s", id);
 	  return false;
 	}
 	
@@ -267,11 +264,14 @@ static bool parse_labels(struct lg_vm *vm, struct lg_bset *labels, const char *i
     }
 
     while (*in) {
-      char c = *in;
-      in++;
+      char c = *in++;
       
       if (c == '\n') {
+	pos->row++;
+	pos->col = 0;
 	break;
+      } else {
+	pos->col++;
       }
     }
   }
@@ -290,6 +290,7 @@ static const char *parse_op(struct lg_vm *vm,
 			    struct lg_bset *labels,
 			    const char *in,
 			    struct lg_pos *pos) {
+  struct lg_pos start_pos = *pos;
   const char *start = in = skipws(in, pos);
   
   while (*in && !isspace(*in)) {
@@ -337,11 +338,11 @@ static const char *parse_op(struct lg_vm *vm,
   } else if (checkid("swap", start, len)) {
     code = LG_SWAP;
   } else {
-    lg_error(vm, "Invalid opcode");
+    lg_error(vm, *pos, "Invalid opcode");
     return NULL;
   }
   
-  struct lg_op *op = lg_emit(vm, code);
+  struct lg_op *op = lg_emit(vm, start_pos, code);
   in = skipws(in, pos);
   
   static const lg_parser_t parsers[LG_OP_MAX] =
@@ -369,10 +370,13 @@ bool lg_asm(struct lg_vm *vm, const char *path) {
   struct lg_buf buf;
   lg_buf_init(&buf);
 
+  struct lg_pos pos;
+  lg_pos_init(&pos, 1, 1);
+
   FILE *f = fopen(path, "r");
 
   if (!f) {
-    lg_error(vm, "Failed opening file '%s': %d", path, errno);
+    lg_error(vm, pos, "Failed opening file '%s': %d", path, errno);
     lg_buf_deinit(&buf);
     return false;
   }
@@ -380,14 +384,13 @@ bool lg_asm(struct lg_vm *vm, const char *path) {
   struct lg_bset labels;
   lg_bset_init(&labels, sizeof(struct label), label_cmp, label_key);
 	    
-  struct lg_pos pos;
-  lg_pos_init(&pos, 1, 0);
   while (*lg_getline(&buf, f));
 
-  if (!parse_labels(vm, &labels, buf.data)) {
+  if (!parse_labels(vm, &pos, &labels, buf.data)) {
     return false;
   }
-  
+   
+  lg_pos_init(&pos, 1, 1);
   const char *in = buf.data;
   while (*in && (in = parse_op(vm, &labels, in, &pos)));
   

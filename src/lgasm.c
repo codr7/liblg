@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  lg_emit(&vm, LG_STOP);
+  lg_emit(&vm, LG_INVALID_POS, LG_STOP);
   lg_exec(&vm, &stack, 0);
 
   if (bench) {

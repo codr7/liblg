@@ -19,7 +19,7 @@ struct lg_vm {
 struct lg_vm *lg_vm_init(struct lg_vm *vm);
 void lg_vm_deinit(struct lg_vm *vm);
 
-struct lg_op *lg_emit(struct lg_vm *vm, enum lg_opcode code);
+struct lg_op *lg_emit(struct lg_vm *vm, struct lg_pos pos, enum lg_opcode code);
 void lg_exec(struct lg_vm *vm, struct lg_stack *stack, size_t start_pc);
 
 #endif

@@ -9,7 +9,8 @@
 #include "lg/val.h"
 #include "lg/vm.h"
 
-struct lg_op *lg_op_init(struct lg_op *_, enum lg_opcode code) {
+struct lg_op *lg_op_init(struct lg_op *_, struct lg_pos pos, enum lg_opcode code) {
+  _->pos = pos;
   _->code = code;
 
   switch (_->code) {
@@ -58,16 +59,16 @@ void lg_op_deinit(struct lg_op *_) {
   }
 }
 
-bool lg_add(struct lg_vm *vm, struct lg_val *x, struct lg_val y) {
+bool lg_add(struct lg_vm *vm, struct lg_pos pos, struct lg_val *x, struct lg_val y) {
   struct lg_type *t = x->type;
 
   if (y.type != t) {
-    lg_error(vm, "Expected type %s, actual %s", t->id, y.type->id);
+    lg_error(vm, pos, "Expected type %s, actual %s", t->id, y.type->id);
     return false;
   }
   
   if (!t->add_imp) {
-    lg_error(vm, "Add not implemented for type %s", t->id);
+    lg_error(vm, pos, "Add not implemented for type %s", t->id);
     return false;
   }
 
